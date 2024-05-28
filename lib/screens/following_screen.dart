@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+02import 'package:flutter/material.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({super.key});
