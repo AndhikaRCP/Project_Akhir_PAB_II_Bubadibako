@@ -120,7 +120,7 @@ class SignInScreen extends StatelessWidget {
                         // Navigate to DashboardScreen
                         Navigator.pushNamed(
                           context,
-                          '/profile',
+                          '/bottomNav',
                         );
                       }
                     },
