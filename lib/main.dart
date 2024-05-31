@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/models/follower.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/favorite_screen.dart';
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/activity': (context) => const ActivityScreen(),
         '/detail': (context) => const DetailScreen(),
-        '/favorite': (context) => const FavoriteScreen(),
+        '/favorite': (context) =>  FavoriteScreen(),
         '/follower': (context) => const FollowerScreen(),
         '/following': (context) => const FollowingScreen(),
         '/landing': (context) => const LandingScreen(),

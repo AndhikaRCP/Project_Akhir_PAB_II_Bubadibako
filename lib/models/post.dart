@@ -9,11 +9,15 @@ class Post {
   double? longitude;
   Timestamp? createdAt;
   Timestamp? updatedAt;
+  bool isFavorite;
+  final String imageAsset;
 
   Post({
     this.id,
     required this.title,
     required this.description,
+    required this.imageAsset,
+    required this.isFavorite,
     this.imageUrl,
     this.latitude,
     this.longitude,
@@ -26,6 +30,8 @@ class Post {
     return Post(
       id: doc.id,
       title: data['title'],
+      imageAsset: data['imageAsset'],
+      isFavorite: data['isFavorite'],
       description: data['description'],
       imageUrl: data['image_url'],
       latitude: data['latitude'] as double,
@@ -40,6 +46,8 @@ class Post {
       'title': title,
       'description': description,
       'image_url': imageUrl,
+      'image_asset': imageAsset,
+      'isFavorite': isFavorite,
       'latitude': latitude,
       'longitude': longitude,
       'created_at': createdAt,
