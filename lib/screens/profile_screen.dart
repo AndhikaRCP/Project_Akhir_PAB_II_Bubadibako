@@ -8,6 +8,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +99,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          _buildBottomNavigationBarItem(Icons.home, 'Home'),
+          _buildBottomNavigationBarItem(Icons.upload, 'Upload'),
+          _buildBottomNavigationBarItem(Icons.star, 'Favorites'),
+          _buildBottomNavigationBarItem(Icons.notifications, 'Notifications'),
+          _buildBottomNavigationBarItem(Icons.person, 'Profile'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      IconData icon, String label) {
+    return BottomNavigationBarItem(
+      icon: Container(
+        padding: EdgeInsets.all(10),
+        child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+      ),
+      label: label,
     );
   }
 }
