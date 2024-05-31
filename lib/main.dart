@@ -7,6 +7,7 @@ import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/landing_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/profile_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/search_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/sign_in_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/sign_up_screen.dart';
