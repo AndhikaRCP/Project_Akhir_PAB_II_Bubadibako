@@ -8,6 +8,8 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,20 +21,19 @@ class _ActivityScreenState extends State<ActivityScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 'Wills liked artwork mother of shells by Nando',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            InkWell(
+            GestureDetector(
               onTap: () {
-                // Handle tap on the image
                 print('Image tapped!');
               },
               child: Image.asset(
-                'assets/activity/image25.png', // Replace with your actual image asset
+                'assets/activity/image25.png',
                 fit: BoxFit.cover,
               ),
             ),
@@ -42,14 +43,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
               children: [
                 IconButton(
                   onPressed: () {
-                    // Handle add to favorites
                     print('Add to favorites tapped!');
                   },
                   icon: const Icon(Icons.star),
                 ),
                 IconButton(
                   onPressed: () {
-                    // Handle comment
                     print('Comment tapped!');
                   },
                   icon: const Icon(Icons.comment),
@@ -63,65 +62,59 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    // Handle more options
                     print('More options tapped!');
                   },
                   icon: const Icon(Icons.more_vert),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
               child: Text(
                 'Wills liked artwork mother of shells by Nando',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
-            InkWell(
+            GestureDetector(
               onTap: () {
-                // Handle tap on the image
                 print('Image tapped!');
               },
               child: Image.asset(
-                'assets/activity/image25.png', // Replace with your actual image asset
+                'assets/activity/image25.png',
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 16.0),
-            const Text(
-              'AQUABLUE',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.upload),
-            label: 'Upload',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+        items: <BottomNavigationBarItem>[
+          _buildBottomNavigationBarItem(Icons.home, 'Home'),
+          _buildBottomNavigationBarItem(Icons.upload, 'Upload'),
+          _buildBottomNavigationBarItem(Icons.star, 'Favorites'),
+          _buildBottomNavigationBarItem(Icons.notifications, 'Notifications'),
+          _buildBottomNavigationBarItem(Icons.person, 'Profile'),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      IconData icon, String label) {
+    return BottomNavigationBarItem(
+      icon: Container(
+        padding: EdgeInsets.all(10),
+        child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+      ),
+      label: label,
     );
   }
 }
