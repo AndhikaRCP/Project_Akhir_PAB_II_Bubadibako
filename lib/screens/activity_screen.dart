@@ -91,11 +91,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          _buildBottomNavigationBarItem(Icons.home, 'Home'),
-          _buildBottomNavigationBarItem(Icons.upload, 'Upload'),
-          _buildBottomNavigationBarItem(Icons.star, 'Favorites'),
-          _buildBottomNavigationBarItem(Icons.notifications, 'Notifications'),
-          _buildBottomNavigationBarItem(Icons.person, 'Profile'),
+          _buildBottomNavigationBarItem(Icons.home, 'activity', '/activity'),
+          _buildBottomNavigationBarItem(Icons.upload, 'upload', '/upload'),
+          _buildBottomNavigationBarItem(Icons.star, 'favorite','/favorite'),
+          _buildBottomNavigationBarItem(Icons.notifications, 'notification','/notification'),
+          _buildBottomNavigationBarItem(Icons.person, 'profile','/profile'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
@@ -109,11 +109,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   BottomNavigationBarItem _buildBottomNavigationBarItem(
-      IconData icon, String label) {
+      IconData icon, String label, String route) {
     return BottomNavigationBarItem(
-      icon: Container(
-        padding: EdgeInsets.all(10),
-        child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+      icon: InkWell(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+        ),
+        onTap: () => Navigator.of(context).pushNamed(route),
       ),
       label: label,
     );

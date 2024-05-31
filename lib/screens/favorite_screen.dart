@@ -9,6 +9,7 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
+  int _selectedIndex = 0;
   List<Post> _filteredPost = [];
 
   @override
@@ -91,6 +92,37 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           },
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          _buildBottomNavigationBarItem(Icons.home, 'activity', '/activity'),
+          _buildBottomNavigationBarItem(Icons.upload, 'upload', '/upload'),
+          _buildBottomNavigationBarItem(Icons.star, 'favorite','/favorite'),
+          _buildBottomNavigationBarItem(Icons.notifications, 'notification','/notification'),
+          _buildBottomNavigationBarItem(Icons.person, 'profile','/profile'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
     );
   }
-}
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      IconData icon, String label, String route) {
+    return BottomNavigationBarItem(
+      icon: InkWell(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+        ),
+        onTap: () => Navigator.of(context).pushNamed(route),
+      ),
+      label: label,
+    );
+  }
+    
+  }

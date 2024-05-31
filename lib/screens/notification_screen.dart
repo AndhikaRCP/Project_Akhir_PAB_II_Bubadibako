@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/data/list_notification.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/detailnotifikasi_screen.dart';
 
-class ListNotification extends StatefulWidget {
-  const ListNotification({Key? key}) : super(key: key);
+class NotificationScreen extends StatefulWidget {
+  const NotificationScreen({Key? key}) : super(key: key);
 
   @override
-  _ListNotificationState createState() => _ListNotificationState();
+  _NotificationScreenState createState() => _NotificationScreenState();
 }
 
-class _ListNotificationState extends State<ListNotification> {
+class _NotificationScreenState extends State<NotificationScreen> {
+    int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +65,36 @@ class _ListNotificationState extends State<ListNotification> {
         },
         itemCount: listNotification.length,
       ),
+    bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          _buildBottomNavigationBarItem(Icons.home, 'activity', '/activity'),
+          _buildBottomNavigationBarItem(Icons.upload, 'upload', '/upload'),
+          _buildBottomNavigationBarItem(Icons.star, 'favorite','/favorite'),
+          _buildBottomNavigationBarItem(Icons.notifications, 'notification','/notification'),
+          _buildBottomNavigationBarItem(Icons.person, 'profile','/profile'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      IconData icon, String label, String route) {
+    return BottomNavigationBarItem(
+      icon: InkWell(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+        ),
+        onTap: () => Navigator.of(context).pushNamed(route),
+      ),
+      label: label,
     );
   }
 }

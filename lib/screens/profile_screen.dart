@@ -1,7 +1,8 @@
+// main.dart
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -9,103 +10,159 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 0;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+  // This function show the sliver app bar
+  // It will be called in each child of the TabBarView
+  SliverAppBar showSliverAppBar(String screenTitle) {
+  return SliverAppBar(
+    backgroundColor: Colors.purple,
+    floating: true,
+    pinned: true,
+    snap: false,
+    flexibleSpace: FlexibleSpaceBar(
+      title: Text(screenTitle),
+      background: Column(
+        children: [
+          Stack(
+            children: [
+              Image.network(
+                'https://images.unsplash.com/photo-1536152470836-b943b246224c?q=80&w=1938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
               ),
-              child: Text('Drawer Header'),
-            ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-          ],
-        ),
-      ),
-      appBar: AppBar(
-        title: const Text("Profile Screen"),
-        backgroundColor: Colors.grey,
-        actions: [
+              const Positioned(
+                bottom: 10,
+                left: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "dika",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '12 Follower',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          '23 Following',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
           Container(
-            child: ElevatedButton(onPressed: () {}, child: Text("Logout")),
-            margin: EdgeInsets.all(10.0),
+            color: Colors.green,
+            width: 100,
+            height: 100,
           )
         ],
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Image.network(
-                    "https://images.unsplash.com/photo-1714779573259-216b0cf746be?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-                Positioned(
-                  left: 15,
-                  bottom: 15,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0), //or 15.0
-                    child: Container(
-                      height: 90.0,
-                      width: 90.0,
-                      color: Color(0xffFF0E58),
-                      child: Image.network(
-                          fit: BoxFit.cover,
-                          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
+    ),
+    bottom: const TabBar(
+      tabs: [
+        Tab(
+          icon: Icon(Icons.home),
+          text: 'Home',
+        ),
+        Tab(
+          icon: Icon(Icons.settings),
+          text: 'Setting',
+        )
+      ],
+    ),
+  );
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(" INI ADLAAH JUDUL"
+        ),
+      ),
+        body: DefaultTabController(
+      length: 2,
+      child: TabBarView(children: [
+        // This CustomScrollView display the Home tab content
+        CustomScrollView(
+          slivers: [
+            showSliverAppBar('Kindacode Home'),
+  
+            // Anther sliver widget: SliverList
+            SliverList(
+              delegate: SliverChildListDelegate([
+                const SizedBox(
+                  height: 400,
+                  child: Center(
+                    child: Text(
+                      'Home Tab',
+                      style: TextStyle(fontSize: 40),
                     ),
                   ),
                 ),
-              ],
-            ),
-            Container(
-              color: Colors.green,
-              height: 50,
-              width: double.maxFinite,
-              child: Row(
-                children: [
-                  Expanded(
-                      child: ElevatedButton(
-                    child: Text(""),
-                    onPressed: () {},
-                  )),
-                  Expanded(
-                      child: Text(
-                    "About",
-                    textAlign: TextAlign.center,
-                  )),
-                ],
-              ),
+                Container(
+                  height: 1500,
+                  color: Colors.green,
+                ),
+              ]),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+
+        // This shows the Settings tab content
+        CustomScrollView(
+          slivers: [
+            showSliverAppBar('Settings Screen'),
+
+            // Show other sliver stuff
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                  height: 600,
+                  color: Colors.blue[200],
+                  child: const Center(
+                    child: Text(
+                      'Setting Tab',
+                      style: TextStyle(fontSize: 40),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 1200,
+                  color: Colors.pink,
+                ),
+              ]),
+            ),
+          ],
+        )
+      ]),
+    ),
+    bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          _buildBottomNavigationBarItem(Icons.home, 'Home'),
-          _buildBottomNavigationBarItem(Icons.upload, 'Upload'),
-          _buildBottomNavigationBarItem(Icons.star, 'Favorites'),
-          _buildBottomNavigationBarItem(Icons.notifications, 'Notifications'),
-          _buildBottomNavigationBarItem(Icons.person, 'Profile'),
+          _buildBottomNavigationBarItem(Icons.home, 'activity', '/activity'),
+          _buildBottomNavigationBarItem(Icons.upload, 'upload', '/upload'),
+          _buildBottomNavigationBarItem(Icons.star, 'favorite','/favorite'),
+          _buildBottomNavigationBarItem(Icons.notifications, 'notification','/notification'),
+          _buildBottomNavigationBarItem(Icons.person, 'profile','/profile'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
@@ -119,11 +176,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   BottomNavigationBarItem _buildBottomNavigationBarItem(
-      IconData icon, String label) {
+      IconData icon, String label, String route) {
     return BottomNavigationBarItem(
-      icon: Container(
-        padding: EdgeInsets.all(10),
-        child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+      icon: InkWell(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Icon(icon, size: 30, color: const Color.fromARGB(255, 0, 0, 0)),
+        ),
+        onTap: () => Navigator.of(context).pushNamed(route),
       ),
       label: label,
     );
