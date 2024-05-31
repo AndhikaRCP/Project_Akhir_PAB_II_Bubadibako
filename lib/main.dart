@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/sign_in_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/sign_up_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/widgets/edit_dialog.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Bubadibako',
+      title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const SignUpScreen(),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Flutter Demo'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            showEditDialog(context);
+          },
+          child: Text('Edit Profile'),
+        ),
+      ),
     );
   }
 }
