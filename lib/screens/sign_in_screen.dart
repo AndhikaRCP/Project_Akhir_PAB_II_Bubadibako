@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/dashboard_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart'; // Import the DashboardScreen
 
 class SignInScreen extends StatelessWidget {
@@ -18,7 +17,7 @@ class SignInScreen extends StatelessWidget {
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -27,8 +26,8 @@ class SignInScreen extends StatelessWidget {
               height: 200,
               width: 180,
             ),
-            SizedBox(height: 8.0),
-            Text(
+            const SizedBox(height: 8.0),
+            const Text(
               'BUBADIBAKO',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -66,7 +65,7 @@ class SignInScreen extends StatelessWidget {
                 letterSpacing: 7.0,
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Form(
               key: _formKey,
               child: Column(
@@ -91,7 +90,7 @@ class SignInScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
@@ -108,7 +107,7 @@ class SignInScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -119,14 +118,13 @@ class SignInScreen extends StatelessWidget {
                         print('Sign In successful for email: $email');
 
                         // Navigate to DashboardScreen
-                        Navigator.push(
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfileScreen()),
+                          '/activity',
                         );
                       }
                     },
-                    child: Text('Sign In'),
+                    child: const Text('Sign In'),
                   ),
                 ],
               ),

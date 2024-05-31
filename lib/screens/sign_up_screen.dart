@@ -159,11 +159,7 @@ class SignUpScreen extends StatelessWidget {
                             'Sign Up successful for username: $username, email: $email');
 
                         // Navigate to SignInScreen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignInScreen()),
-                        );
+                        Navigator.pushNamed(context, '/signIn');
                       }
                     },
                     child: Text('Sign Up'),
