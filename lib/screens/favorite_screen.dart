@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:project_akhir_pab_ii_bubadibako/data/post_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 
 class FavoritesScreen extends StatefulWidget {
   @override
@@ -7,16 +9,14 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
-  List<String> _favoriteImages = [
-    'https://th.bing.com/th/id/R.6fd0ada60419a490759f689db9e51999?rik=FcoqT%2frVD8S5gQ&riu=http%3a%2f%2fs3.amazonaws.com%2frtvc-assets-senalradionica.gov.co%2fs3fs-public%2fsenalradionica%2farticulo-noticia%2fgaleriaimagen%2fpokemonfront.jpg&ehk=YEt%2bHE2IGWMTs9DUIrBgP9Eb%2fPXKMfzaa1bNd0urKD4%3d&risl=&pid=ImgRaw&r=0',
-    'https://th.bing.com/th/id/R.6fd0ada60419a490759f689db9e51999?rik=FcoqT%2frVD8S5gQ&riu=http%3a%2f%2fs3.amazonaws.com%2frtvc-assets-senalradionica.gov.co%2fs3fs-public%2fsenalradionica%2farticulo-noticia%2fgaleriaimagen%2fpokemonfront.jpg&ehk=YEt%2bHE2IGWMTs9DUIrBgP9Eb%2fPXKMfzaa1bNd0urKD4%3d&risl=&pid=ImgRaw&r=0',
-    'https://th.bing.com/th/id/R.6fd0ada60419a490759f689db9e51999?rik=FcoqT%2frVD8S5gQ&riu=http%3a%2f%2fs3.amazonaws.com%2frtvc-assets-senalradionica.gov.co%2fs3fs-public%2fsenalradionica%2farticulo-noticia%2fgaleriaimagen%2fpokemonfront.jpg&ehk=YEt%2bHE2IGWMTs9DUIrBgP9Eb%2fPXKMfzaa1bNd0urKD4%3d&risl=&pid=ImgRaw&r=0',
-    'https://th.bing.com/th/id/OIP.pBdOuLW3zkj5DjYslbKg7QHaEK?rs=1&pid=ImgDetMain',
-    'https://th.bing.com/th/id/R.6fd0ada60419a490759f689db9e51999?rik=FcoqT%2frVD8S5gQ&riu=http%3a%2f%2fs3.amazonaws.com%2frtvc-assets-senalradionica.gov.co%2fs3fs-public%2fsenalradionica%2farticulo-noticia%2fgaleriaimagen%2fpokemonfront.jpg&ehk=YEt%2bHE2IGWMTs9DUIrBgP9Eb%2fPXKMfzaa1bNd0urKD4%3d&risl=&pid=ImgRaw&r=0',
-    'https://th.bing.com/th/id/R.6fd0ada60419a490759f689db9e51999?rik=FcoqT%2frVD8S5gQ&riu=http%3a%2f%2fs3.amazonaws.com%2frtvc-assets-senalradionica.gov.co%2fs3fs-public%2fsenalradionica%2farticulo-noticia%2fgaleriaimagen%2fpokemonfront.jpg&ehk=YEt%2bHE2IGWMTs9DUIrBgP9Eb%2fPXKMfzaa1bNd0urKD4%3d&risl=&pid=ImgRaw&r=0',
-    'https://th.bing.com/th/id/R.6fd0ada60419a490759f689db9e51999?rik=FcoqT%2frVD8S5gQ&riu=http%3a%2f%2fs3.amazonaws.com%2frtvc-assets-senalradionica.gov.co%2fs3fs-public%2fsenalradionica%2farticulo-noticia%2fgaleriaimagen%2fpokemonfront.jpg&ehk=YEt%2bHE2IGWMTs9DUIrBgP9Eb%2fPXKMfzaa1bNd0urKD4%3d&risl=&pid=ImgRaw&r=0',
-    'https://th.bing.com/th/id/OIP.pBdOuLW3zkj5DjYslbKg7QHaEK?rs=1&pid=ImgDetMain',
-  ];
+  List<Post> _filteredPost = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Populate _filteredPost with favorite posts
+    _filteredPost = postList.where((post) => post.isFavorite).toList();
+  }
 
   void _showImageDialog(String imageUrl) {
     showDialog(
@@ -65,10 +65,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             mainAxisSpacing: 1.5,
             childAspectRatio: 1.0,
           ),
-          itemCount: _favoriteImages.length,
+          itemCount: _filteredPost.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: () => _showImageDialog(_favoriteImages[index]),
+              onTap: () => _showImageDialog(_filteredPost[index].imageAsset),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.black, width: 4),
@@ -77,7 +77,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6.0),
                   child: CachedNetworkImage(
-                    imageUrl: _favoriteImages[index],
+                    imageUrl: _filteredPost[index].imageAsset,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
                     ),
