@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/user_services.dart';
 
 class AuthServices {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,10 +34,28 @@ class AuthServices {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       return credential.user;
-      print(credential.user);
     } catch (e) {
       print("Proses Login gagal");
     }
     return null;
+  }
+
+   User? get currentUser => _auth.currentUser;
+
+  // Metode untuk mendapatkan data pengguna yang sedang masuk
+  Future<Map<String, dynamic>?> getCurrentUserData() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        // Mengambil data pengguna dari Firestore berdasarkan UID
+        return await UserServices().getUserData(user.uid);
+      } else {
+        print('Tidak ada pengguna yang sedang masuk');
+        return null;
+      }
+    } catch (e) {
+      print('Gagal mengambil data pengguna yang sedang masuk: $e');
+      return null;
+    }
   }
 }
