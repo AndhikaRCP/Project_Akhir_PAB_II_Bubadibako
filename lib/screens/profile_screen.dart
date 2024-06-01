@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/editProfileAbout.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
@@ -228,15 +230,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 bottom: 0,
                                 right: 20,
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditProfileAboutScreen(
-                                            pengguna: penggunaData,
-                                          ),
-                                        ));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditProfileAboutScreen(
+                                          pengguna: penggunaData,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: const Text("Edit About"),
                                 ),
@@ -245,22 +248,72 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 padding: const EdgeInsets.all(30),
                                 child: Column(
                                   children: [
-                                    const Text(
-                                      "Ini adalah deskripsi dari about yang berisikan ",
-                                      style: TextStyle(fontSize: 20),
-                                      textAlign: TextAlign.justify,
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    AspectRatio(
-                                      aspectRatio: 16 / 9,
-                                      child: Image.network(
-                                        height: 200,
-                                        width: 100,
-                                        "https://images.unsplash.com/photo-1536152470836-b943b246224c?q=80&w=1938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                        fit: BoxFit.cover,
-                                      ),
+                                    StreamBuilder(
+                                      stream: penggunaServices
+                                          .getPenggunaAboutProfile(
+                                              penggunaData.id ?? ''),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          // Menampilkan indikator loading saat data sedang dimuat
+                                          return CircularProgressIndicator();
+                                        } else if (snapshot.hasError) {
+                                          // Menampilkan pesan error jika terjadi kesalahan
+                                          return Text(
+                                              'Error: ${snapshot.error}');
+                                        } else {
+                                          // Memuat data penggunaAbout dari snapshot
+                                          PenggunaAbout? penggunaAbout =
+                                              snapshot.data;
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.stretch,
+                                            children: [
+                                              // Menampilkan teks dari penggunaAbout
+                                              Text(
+                                                penggunaAbout?.text ?? 'Kosong',
+                                                style: const TextStyle(
+                                                    fontSize: 20),
+                                                textAlign: TextAlign.justify,
+                                              ),
+                                              const SizedBox(height: 20),
+                                              // Menampilkan gambar dengan AspectRatio
+                                              AspectRatio(
+                                                aspectRatio: 16 / 9,
+                                                child: Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    // Menampilkan indikator loading saat gambar dimuat
+                                                    if (penggunaAbout
+                                                            ?.imageUrl ==
+                                                        null)
+                                                      CircularProgressIndicator(), // Indikator loading
+                                                    // Memuat gambar dari URL Firebase Storage
+                                                    if (penggunaAbout
+                                                            ?.imageUrl !=
+                                                        null)
+                                                      CachedNetworkImage(
+                                                        imageUrl: penggunaAbout!
+                                                            .imageUrl!,
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        }
+                                      },
                                     ),
                                   ],
                                 ),

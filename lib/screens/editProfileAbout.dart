@@ -8,12 +8,17 @@ import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_servic
 class EditProfileAboutScreen extends StatefulWidget {
   const EditProfileAboutScreen({Key? key, this.pengguna}) : super(key: key);
   final Pengguna? pengguna;
-
   @override
   _EditProfileAboutScreenState createState() => _EditProfileAboutScreenState();
 }
 
 class _EditProfileAboutScreenState extends State<EditProfileAboutScreen> {
+  late Stream<PenggunaAbout?> _penggunaAboutStream;
+
+  Stream<PenggunaAbout?> _getPenggunaAboutStream() {
+    return penggunaServices.getPenggunaAboutProfile(widget.pengguna?.id ?? '');
+  }
+
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _textController;
   late File? imageFile; // Change imageUrl type to File?
@@ -21,9 +26,12 @@ class _EditProfileAboutScreenState extends State<EditProfileAboutScreen> {
   @override
   void initState() {
     super.initState();
+    _penggunaAboutStream = _getPenggunaAboutStream();
     _textController = TextEditingController(
-      text: widget.pengguna?.penggunaAbout?.text ?? '',
+      text: widget.pengguna?.penggunaAbout?.text ?? 'kosong',
     );
+    print(widget.pengguna?.penggunaAbout?.text);
+    print(_textController.text);
     // imageUrl = widget.pengguna?.penggunaAbout?.imageUrl ?? '';
     // Initialize imageFile to null initially
     imageFile = widget.pengguna?.penggunaAbout?.imageUrl != null
@@ -101,16 +109,42 @@ class _EditProfileAboutScreenState extends State<EditProfileAboutScreen> {
                 const SizedBox(height: 16),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                    
-                          PenggunaAbout penggunaAbout = PenggunaAbout(imageUrl: "/", text: _textController.text);
-                          widget.pengguna!.penggunaAbout = penggunaAbout;
-                          print(widget.pengguna!.penggunaAbout?.text);
-                          print(widget.pengguna!.penggunaAbout?.id);
-                          print(widget.pengguna!.penggunaAbout?.imageUrl);
-                      
-                    penggunaServices.updateAboutProfilePengguna(widget.pengguna!, context);
+                      if (imageFile != null && imageFile!.existsSync()) {
+                         print("Masukk ada gambar kesini");
+                        // Jika gambar telah dipilih, unggah gambar ke Firebase Storage
+                        PenggunaAbout? penggunaAboutId = await penggunaServices
+                            .getPenggunaAboutProfile(widget.pengguna?.id ?? '')
+                            .first;
+                        final imageUrl =
+                            await penggunaServices.uploadImagePenggunaAbout(
+                          widget.pengguna!.id ?? '', // ID pengguna
+                          penggunaAboutId!.id ??
+                              '', // ID penggunaAbout (harus disesuaikan)
+                          imageFile!,
+                        );
+                        // Buat objek PenggunaAbout dengan URL gambar baru
+                        final penggunaAbout = PenggunaAbout(
+                          imageUrl: imageUrl,
+                          text: _textController.text,
+                        );
+                        // Perbarui penggunaAbout di Firestore
+                        widget.pengguna!.penggunaAbout = penggunaAbout;
+                        await penggunaServices.updateAboutProfilePengguna(
+                            widget.pengguna!, context);
+                      } else {
+                        print("Masukk kesini");
+                        // Jika tidak ada gambar yang dipilih, hanya perbarui teks penggunaAbout
+                        final penggunaAbout = PenggunaAbout(
+                          imageUrl:
+                              widget.pengguna?.penggunaAbout?.imageUrl ?? '',
+                          text: _textController.text,
+                        );
+                        widget.pengguna!.penggunaAbout = penggunaAbout;
+                        await penggunaServices.updateAboutProfilePengguna(
+                            widget.pengguna!, context);
+                      }
                     }
                   },
                   child: const Text('Simpan'),
