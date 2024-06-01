@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/edit_profile_screen.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/favorite_screen.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
@@ -43,6 +44,7 @@ import 'package:project_akhir_pab_ii_bubadibako/widgets/BottomNavBarWidget.dart'
             '/landing': (context) =>  LandingScreen(),
             '/notification': (context) => const NotificationScreen(),
             '/bottomNav' :(context) =>  const BottomNavBarWidget(),
+            '/editProfile' :(context) =>  const EditProfileScreen(),
             '/profile': (context) => const ProfileScreen(),
             // '/search': (context) => const SearchScreen(),
             '/signIn': (context) => SignInScreen(),

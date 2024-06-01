@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project_akhir_pab_ii_bubadibako/services/user_services.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_services.dart';
 
 class AuthServices {
   FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Stream<User?> authStateChanges() {
+    return _auth.authStateChanges();
+  }
+  
   Future<User?> signUpWithEmailAndPassword(
       String email, String username, String password) async {
     try {
@@ -13,17 +18,14 @@ class AuthServices {
           email: email, password: password);
       try {
         String userId = credential.user!.uid;
-        await _firestore.collection('users').doc(userId).set({
-          'username': username,
-          'email': email,
-        });
+        await penggunaServices.createpengguna(userId, username, email);
         print('Data pengguna berhasil disimpan di Firestore');
       } catch (e) {
         print('Gagal menyimpan data pengguna: $e');
       }
       return credential.user;
     } catch (e) {
-      print("Proses Sign Up gagal" );
+      print("Proses Sign Up gagal");
     }
     return null;
   }
@@ -40,22 +42,9 @@ class AuthServices {
     return null;
   }
 
-   User? get currentUser => _auth.currentUser;
+  User? get currentUser => _auth.currentUser;
 
   // Metode untuk mendapatkan data pengguna yang sedang masuk
-  Future<Map<String, dynamic>?> getCurrentUserData() async {
-    try {
-      User? user = _auth.currentUser;
-      if (user != null) {
-        // Mengambil data pengguna dari Firestore berdasarkan UID
-        return await UserServices().getUserData(user.uid);
-      } else {
-        print('Tidak ada pengguna yang sedang masuk');
-        return null;
-      }
-    } catch (e) {
-      print('Gagal mengambil data pengguna yang sedang masuk: $e');
-      return null;
-    }
-  }
+  // Metode untuk mendapatkan data pengguna yang sedang masuk
+
 }

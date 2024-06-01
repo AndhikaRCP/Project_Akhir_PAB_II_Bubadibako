@@ -72,7 +72,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               onTap: () => _showImageDialog(_filteredPost[index].imageAsset),
               child: Container(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black, width: 4),
+                  border: Border.all(color: const Color.fromRGBO(0, 0, 0, 1), width: 4),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: ClipRRect(
