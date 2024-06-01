@@ -1,26 +1,65 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'sign_in_screen.dart'; // Import the SignInScreen
+import 'package:project_akhir_pab_ii_bubadibako/services/auth_services.dart';
 
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final AuthServices _auth = AuthServices();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailControllerKey = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirm_passwordController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _usernameController.dispose();
+    _emailControllerKey.dispose();
+    _passwordController.dispose();
+    _confirm_passwordController.dispose();
+    super.dispose();
+  }
+
+  void _signUp() async {
+    String username = _usernameController.text;
+    String email = _emailControllerKey.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPassword(email,username, password);
+
+    if (user != null) {
+      print('Sign Up successful for username: $username, email: $email');
+    Navigator.pushNamed(context, '/signIn');
+    } else {
+      print("Sign Up Gagal");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final TextEditingController _usernameController = TextEditingController();
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-    final TextEditingController _confirmPasswordController =
-        TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign Up'),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon panah ke belakang
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigasi ke halaman sebelumnya
+          },
+        ),
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -29,8 +68,8 @@ class SignUpScreen extends StatelessWidget {
               height: 200,
               width: 180,
             ),
-            SizedBox(height: 8.0),
-            Text(
+            const SizedBox(height: 8.0),
+            const Text(
               'BUBADIBAKO',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -68,7 +107,7 @@ class SignUpScreen extends StatelessWidget {
                 letterSpacing: 7.0,
               ),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Form(
               key: _formKey,
               child: Column(
@@ -88,9 +127,9 @@ class SignUpScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   TextFormField(
-                    controller: _emailController,
+                    controller: _emailControllerKey,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       border: OutlineInputBorder(
@@ -109,7 +148,7 @@ class SignUpScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
@@ -128,9 +167,9 @@ class SignUpScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   TextFormField(
-                    controller: _confirmPasswordController,
+                    controller: _confirm_passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
@@ -147,23 +186,30 @@ class SignUpScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        final String username = _usernameController.text;
-                        final String email = _emailController.text;
-                        final String password = _passwordController.text;
-
-                        print(
-                            'Sign Up successful for username: $username, email: $email');
-
-                        // Navigate to SignInScreen
-                        Navigator.pushNamed(context, '/signIn');
+                        _signUp();
                       }
                     },
-                    child: Text('Sign Up'),
+                    child: const Text('Sign Up'),
                   ),
+                  const SizedBox(height: 20.0),
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.of(context).pushReplacementNamed('/signIn'),
+                    child: const Text(
+                      "Sudah Punya Akun? Login disini!",
+                      style: TextStyle(
+                        color: Colors.blue, // Warna teks
+                        fontWeight: FontWeight.bold, // Ketebalan teks
+                        fontSize: 16, // Ukuran teks
+                        decoration:
+                            TextDecoration.underline, // Garis bawah teks
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

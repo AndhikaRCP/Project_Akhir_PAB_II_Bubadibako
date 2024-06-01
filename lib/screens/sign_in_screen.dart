@@ -1,19 +1,55 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart'; // Import the DashboardScreen
+import 'package:project_akhir_pab_ii_bubadibako/services/auth_services.dart'; // Import the DashboardScreen
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+class SignInScreen extends StatefulWidget {
+  SignInScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final AuthServices _auth = AuthServices();
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _signIn() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print('Sign In successful for email: $email, password: $password');
+      Navigator.pushNamed(context, '/bottomNav');
+    } else {
+      print("Sign In Gagal");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sign In'),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon panah ke belakang
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigasi ke halaman sebelumnya
+          },
+        ),
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -111,21 +147,26 @@ class SignInScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        final String email = _emailController.text;
-                        final String password = _passwordController.text;
-
-                        // Logika untuk proses sign in
-                        print('Sign In successful for email: $email');
-
-                        // Navigate to DashboardScreen
-                        Navigator.pushNamed(
-                          context,
-                          '/profile',
-                        );
+                        _signIn();
                       }
                     },
                     child: const Text('Sign In'),
                   ),
+                  const SizedBox(height: 20.0),
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.of(context).pushReplacementNamed('/signUp'),
+                    child: const Text(
+                      "Belum Punya Akun? Daftar disini!",
+                      style: TextStyle(
+                        color: Colors.blue, // Warna teks
+                        fontWeight: FontWeight.bold, // Ketebalan teks
+                        fontSize: 16, // Ukuran teks
+                        decoration:
+                            TextDecoration.underline, // Garis bawah teks
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
