@@ -55,3 +55,12 @@ class Post {
     };
   }
 }
+
+class Posting {
+  final String imageAsset;
+
+  Posting({required this.imageAsset});
+
+  
+}
+

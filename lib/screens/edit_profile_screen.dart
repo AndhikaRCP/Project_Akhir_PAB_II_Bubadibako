@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
-import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_services.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_services.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key, this.pengguna}) : super(key: key);

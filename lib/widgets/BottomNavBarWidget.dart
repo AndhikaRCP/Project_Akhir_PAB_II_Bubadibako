@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/favorite_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/posting_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/profile_screen.dart';
 
 class BottomNavBarWidget extends StatefulWidget {
@@ -15,18 +16,15 @@ class _MyButtomNavBarState extends State<BottomNavBarWidget> {
   int myCurrentIndex = 0;
   List pages =  [
     ActivityScreen(),
-    NotificationScreen(),
+    PostingScreen(),
     FavoriteScreen(),
+    NotificationScreen(),
     ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Bottom Navigation Bar"),
-      ),
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(boxShadow: [
@@ -49,10 +47,11 @@ class _MyButtomNavBarState extends State<BottomNavBarWidget> {
               },
               items: const [
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+                BottomNavigationBarItem(icon: Icon(Icons.upload_rounded), label: "Upload"),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.favorite), label: "Favorite"),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.settings), label: "Setting"),
+                    icon: Icon(Icons.message), label: "Notification"),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.person_outline), label: "Profile"),
               ]),

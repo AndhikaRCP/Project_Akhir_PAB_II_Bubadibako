@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/data/post_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/widgets/app_bar_widget.dart';
 
 class FavoriteScreen extends StatefulWidget {
   @override
@@ -49,19 +50,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Favorite',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+       appBar: const AppBarWidget(title: "Favorite",),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: 3,
             crossAxisSpacing: 1.5,
             mainAxisSpacing: 1.5,
             childAspectRatio: 1.0,

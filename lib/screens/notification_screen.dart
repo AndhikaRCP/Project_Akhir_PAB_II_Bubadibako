@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/data/list_notification.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/detailnotifikasi_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/widgets/app_bar_widget.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -14,15 +15,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notifikasi'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+       appBar: const AppBarWidget(title: "Notification",),
       body: ListView.builder(
         itemBuilder: (context, index) {
           final notification = listNotification[index];

@@ -1,0 +1,171 @@
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
+import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+
+class PostingScreen extends StatefulWidget {
+  const PostingScreen({super.key});
+
+  @override
+  _PostingScreenState createState() => _PostingScreenState();
+}
+
+class _PostingScreenState extends State<PostingScreen> {
+  final _captionController = TextEditingController();
+  final List<Post> _postList = [];
+
+  void _showImageDialog(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black, width: 4),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6.0),
+              child: Image.file(
+                File(imageUrl),
+                errorBuilder: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _captionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Center(child: Text('New Post')),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            // Handle close button press
+            Navigator.pop(context);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () {
+              // Handle posting
+              _handlePost();
+            },
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Display the selected gallery image in a grid
+            _postList.isNotEmpty
+                ? GestureDetector(
+                    onTap: () => _showImageDialog(_postList.last.imageAsset),
+                    child: ClipRRect(
+                      borderRadius:
+                          BorderRadius.circular(10), // Add a rounded corner
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 1),
+                        ),
+                        child: Image.file(
+                          File(_postList.last.imageAsset),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _captionController,
+                decoration: const InputDecoration(
+                  hintText: 'Masukkan caption anda...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            AppBar(
+              title: const Center(child: Text('Gallery Anda')),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.camera),
+                  onPressed: () {
+                    // Handle picking image
+                    _handleGallery();
+                  },
+                ),
+              ],
+            ),
+            GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 1.5,
+                mainAxisSpacing: 1.5,
+                childAspectRatio: 1.0,
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _postList.length,
+              itemBuilder: (context, index) {
+                final post = _postList.reversed.toList()[index];
+
+                return GestureDetector(
+                  onTap: () => _showImageDialog(post.imageAsset),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black, width: 4),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6.0),
+                      child: Image.file(
+                        File(post.imageAsset),
+                        errorBuilder: (context, file, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _handlePost() {
+    // Handle posting logic here
+    print('Posting...');
+    print('Caption: ${_captionController.text}');
+    print('Images: ${_postList.length}');
+  }
+
+  void _handleGallery() async {
+    // Handle gallery selection logic here
+    print('Selecting from gallery...');
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _postList.add(Post(title: "Hello", description: "hello", isFavorite: false, imageAsset: image.path));
+      });
+    }
+  }
+}

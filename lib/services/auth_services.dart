@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
-import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_services.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_services.dart';
 
 class AuthServices {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -43,8 +43,4 @@ class AuthServices {
   }
 
   User? get currentUser => _auth.currentUser;
-
-  // Metode untuk mendapatkan data pengguna yang sedang masuk
-  // Metode untuk mendapatkan data pengguna yang sedang masuk
-
 }

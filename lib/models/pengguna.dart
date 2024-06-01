@@ -2,6 +2,7 @@
   import 'package:project_akhir_pab_ii_bubadibako/models/Following.dart';
   import 'package:project_akhir_pab_ii_bubadibako/models/favorite.dart';
   import 'package:project_akhir_pab_ii_bubadibako/models/follower.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
   import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 
   class Pengguna {
@@ -9,6 +10,7 @@
     String? username;
     String? email;
     String? password;
+    PenggunaAbout? penggunaAbout;
     List<Post>? posts;
     List<Follower>? followers;
     List<Following>? following;
@@ -22,6 +24,7 @@
         this.posts,
         this.followers,
         this.following,
+        this.penggunaAbout,
         this.favorite});
 
     factory Pengguna.fromDocument(DocumentSnapshot doc) {
@@ -34,6 +37,7 @@
           favorite: data['favorite'],
           followers: data['followers'],
           following: data['following'],
+          penggunaAbout: data['penggunaAbout'],
           posts: data['posts']);
     }
 
@@ -45,6 +49,7 @@
         'favorite': favorite,
         'followers': followers,
         'following': following,
+        'penggunaAbout': penggunaAbout,
         'posts': posts
       };
     }

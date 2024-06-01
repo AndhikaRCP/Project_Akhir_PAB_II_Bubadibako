@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:project_akhir_pab_ii_bubadibako/widgets/app_bar_widget.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({Key? key}) : super(key: key);
@@ -14,11 +15,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Activity'),
-        leading: const Icon(Icons.menu),
-        actions: const [Icon(Icons.search)],
-      ),
+     appBar: const AppBarWidget(title: "Activity",),
       body: SingleChildScrollView(
         child: Column(
           children: [

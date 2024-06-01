@@ -1,4 +1,4 @@
-    import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
     import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
@@ -22,8 +22,8 @@ import 'package:project_akhir_pab_ii_bubadibako/widgets/BottomNavBarWidget.dart'
   runApp(MyApp());
 }
 
-    class MyApp extends StatelessWidget {
-      const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
       @override
       Widget build(BuildContext context) {
