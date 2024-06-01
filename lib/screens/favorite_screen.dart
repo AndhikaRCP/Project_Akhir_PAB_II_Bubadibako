@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/data/post_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 
-class FavoritesScreen extends StatefulWidget {
+class FavoriteScreen extends StatefulWidget {
   @override
-  _FavoritesScreenState createState() => _FavoritesScreenState();
+  _FavoriteScreenState createState() => _FavoriteScreenState();
 }
 
-class _FavoritesScreenState extends State<FavoritesScreen> {
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  int _selectedIndex = 0;
   List<Post> _filteredPost = [];
 
   @override
@@ -50,7 +51,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Favorites',
+          'Favorite',
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -93,4 +94,5 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       ),
     );
   }
-}
+    
+  }
