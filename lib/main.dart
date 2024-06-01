@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/favorite_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/follow_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/posting_screen.dart';
 
 void main() {
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: PostingScreen(),
+      home: FollowScreen(),
     );
   }
 }
