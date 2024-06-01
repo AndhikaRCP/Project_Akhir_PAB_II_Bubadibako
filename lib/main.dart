@@ -1,39 +1,53 @@
+    import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/sign_up_screen.dart';
-import 'package:project_akhir_pab_ii_bubadibako/widgets/edit_dialog.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/favorite_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/landing_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/profile_screen.dart';
+    // import 'package:project_akhir_pab_ii_bubadibako/screens/search_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/sign_in_screen.dart';
+    import 'package:project_akhir_pab_ii_bubadibako/screens/sign_up_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/widget/dashboard_screen.dart';
+    
 
-void main() {
+ void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
-    );
-  }
-}
+    class MyApp extends StatelessWidget {
+      const MyApp({super.key});
 
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter Demo'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            showEditDialog(context);
+      @override
+      Widget build(BuildContext context) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Bubadibako',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: SignUpScreen(),
+          routes: {
+            '/activity': (context) => const ActivityScreen(),
+            '/detail': (context) => const DetailScreen(),
+            '/favorite': (context) => FavoriteScreen(),
+            '/follower': (context) => const FollowerScreen(),
+            '/following': (context) => const FollowingScreen(),
+            '/landing': (context) => const LandingScreen(),
+            '/notification': (context) => const NotificationScreen(),
+            '/bottomNav' :(context) =>  const BottomNavBarWidget(),
+            '/profile': (context) => const ProfileScreen(),
+            // '/search': (context) => const SearchScreen(),
+            '/signIn': (context) => SignInScreen(),
+            '/signUp': (context) => SignUpScreen(),
           },
-          child: Text('Edit Profile'),
-        ),
-      ),
-    );
-  }
-}
+        );
+      }
+    }
+    
