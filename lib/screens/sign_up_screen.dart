@@ -34,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String email = _emailControllerKey.text;
     String password = _passwordController.text;
 
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    User? user = await _auth.signUpWithEmailAndPassword(email,username, password);
 
     if (user != null) {
       print('Sign Up successful for username: $username, email: $email');
