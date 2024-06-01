@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/models/userFollower.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
 import 'follower_screen.dart';
 

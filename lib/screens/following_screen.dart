@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/models/userFollowing.dart';
+import 'package:project_akhir_pab_ii_bubadibako/data/follow_list.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/userFollow.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({Key? key}) : super(key: key);
@@ -10,40 +11,15 @@ class FollowingScreen extends StatefulWidget {
 
 class _FollowingScreenState extends State<FollowingScreen>
     with TickerProviderStateMixin {
-  List<UserFollowing> _selectedUsers = [];
-  List<UserFollowing> _users = [
-    UserFollowing(
-        'Elliana Palacios',
-        '@elliana',
-        'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
-        false),
-    UserFollowing(
-        'Kayley Dwyer',
-        '@kayley',
-        'https://images.unsplash.com/photo-1503467913725-8484b65b0715?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=cf7f82093012c4789841f570933f88e3',
-        false),
-    UserFollowing(
-        'Kathleen Mcdonough',
-        '@kathleen',
-        'https://images.unsplash.com/photo-1507081323647-4d250478b919?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b717a6d0469694bbe6400e6bfe45a1da',
-        false),
-    UserFollowing(
-        'Kathleen Dyer',
-        '@kathleen',
-        'https://images.unsplash.com/photo-1502980426475-b83966705988?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=ddcb7ec744fc63472f2d9e19362aa387',
-        false),
-    UserFollowing(
-        'Mikayla Marquez',
-        '@mikayla',
-        'https://images.unsplash.com/photo-1541710430735-5fca14c95b00?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ',
-        false)
-  ];
-  List<UserFollowing> _searchResults = [];
+  List<UserFollow> _selectedUsers = [];
+  List<UserFollow> _users = [];
+  List<UserFollow> _searchResults = [];
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _users = followlist;
     _searchController.addListener(_searchUsers);
   }
 
@@ -56,55 +32,65 @@ class _FollowingScreenState extends State<FollowingScreen>
   void _searchUsers() {
     setState(() {
       _searchResults = _users
-          .where((user) => user.name
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase()))
-          .toList();
+         .where((user) => user.name
+             .toLowerCase()
+             .contains(_searchController.text.toLowerCase()))
+         .toList();
     });
   }
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Container(
-      padding: EdgeInsets.only(right: 20, left: 20),
-      color: Colors.white,
-      height: double.infinity,
-      width: double.infinity,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 10),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search by name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50), // large border radius for a circular shape
-                  borderSide: BorderSide.none, // no border
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.only(right: 20, left: 20),
+        color: Colors.white,
+        height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search by name',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Color.fromARGB(223, 206, 204, 204),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  prefixIcon: Icon(Icons.search, size: 24),
                 ),
-                filled: true, // fill the background with a color
-                fillColor: Color.fromARGB(223, 206, 204, 204), // background color
-                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // padding inside the search bar
-                prefixIcon: Icon(Icons.search, size: 24), // search icon
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _searchResults.length,
-              itemBuilder: (context, index) {
-                return userComponent(user: _searchResults[index]);
-              },
+            Expanded(
+              child: ListView.builder(
+                itemCount: _searchController.text.isEmpty
+                   ? _users.where((user) => user.isFollowedByMe).length
+                    : _searchResults.where((user) => user.isFollowedByMe).length,
+                itemBuilder: (context, index) {
+                  UserFollow user = _searchController.text.isEmpty
+                     ? _users
+                         .where((user) => user.isFollowedByMe)
+                         .elementAt(index)
+                      : _searchResults
+                         .where((user) => user.isFollowedByMe)
+                         .elementAt(index);
+                  return userComponent(user: user);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-  userComponent({required UserFollowing user}) {
+  Widget userComponent({required UserFollow user}) {
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
@@ -138,16 +124,19 @@ Widget build(BuildContext context) {
               child: MaterialButton(
                 elevation: 0,
                 color:
-                    user.isFollowedByMe ? Color(0xffeeeeee) : Color(0xffffff),
+                    user.isFollowedByMe? Color(0xffeeeeee) : Color(0xffffff),
                 onPressed: () {
                   setState(() {
-                    user.isFollowedByMe = !user.isFollowedByMe;
+                    user.isFollowedByMe =!user.isFollowedByMe;
+                    final index =
+                        _users.indexWhere((u) => u.username == user.username);
+                   
                   });
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: Text(user.isFollowedByMe ? 'Unfollow' : 'Follow',
+                child: Text(user.isFollowedByMe? 'Unfollow' : 'Follow',
                     style: TextStyle(color: Colors.black)),
               ))
         ],

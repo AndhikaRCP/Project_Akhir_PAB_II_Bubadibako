@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/models/userFollower.dart';
+import 'package:project_akhir_pab_ii_bubadibako/data/follow_list.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/userFollow.dart';
 
 class FollowerScreen extends StatefulWidget {
   const FollowerScreen({Key? key}) : super(key: key);
@@ -10,40 +11,15 @@ class FollowerScreen extends StatefulWidget {
 
 class _FollowerScreenState extends State<FollowerScreen>
     with TickerProviderStateMixin {
-  List<UserFollower> _selectedUsers = [];
-  List<UserFollower> _users = [
-    UserFollower(
-        'Elliana Palacios',
-        '@elliana',
-        'https://images.unsplash.com/photo-1504735217152-b768bcab5ebc?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=0ec8291c3fd2f774a365c8651210a18b',
-        false),
-    UserFollower(
-        'Kayley Dwyer',
-        '@kayley',
-        'https://images.unsplash.com/photo-1503467913725-8484b65b0715?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=cf7f82093012c4789841f570933f88e3',
-        false),
-    UserFollower(
-        'Kathleen Mcdonough',
-        '@kathleen',
-        'https://images.unsplash.com/photo-1507081323647-4d250478b919?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b717a6d0469694bbe6400e6bfe45a1da',
-        false),
-    UserFollower(
-        'Kathleen Dyer',
-        '@kathleen',
-        'https://images.unsplash.com/photo-1502980426475-b83966705988?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=ddcb7ec744fc63472f2d9e19362aa387',
-        false),
-    UserFollower(
-        'Mikayla Marquez',
-        '@mikayla',
-        'https://images.unsplash.com/photo-1541710430735-5fca14c95b00?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ',
-        false)
-  ];
-  List<UserFollower> _searchResults = [];
+  List<UserFollow> _selectedUsers = [];
+  List<UserFollow> _users = [];
+  List<UserFollow> _searchResults = [];
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _users = followlist;
     _searchController.addListener(_searchUsers);
   }
 
@@ -56,10 +32,10 @@ class _FollowerScreenState extends State<FollowerScreen>
   void _searchUsers() {
     setState(() {
       _searchResults = _users
-          .where((user) => user.name
-              .toLowerCase()
-              .contains(_searchController.text.toLowerCase()))
-          .toList();
+         .where((user) => user.name
+             .toLowerCase()
+             .contains(_searchController.text.toLowerCase()))
+         .toList();
     });
   }
 
@@ -97,12 +73,12 @@ class _FollowerScreenState extends State<FollowerScreen>
             Expanded(
               child: ListView.builder(
                 itemCount: _searchController.text.isEmpty
-                    ? _users.length
+                   ? _users.length
                     : _searchResults.length,
                 itemBuilder: (context, index) {
                   return userComponent(
                     user: _searchController.text.isEmpty
-                        ? _users[index]
+                       ? _users[index]
                         : _searchResults[index],
                   );
                 },
@@ -114,7 +90,7 @@ class _FollowerScreenState extends State<FollowerScreen>
     );
   }
 
-  userComponent({required UserFollower user}) {
+  Widget userComponent({required UserFollow user}) {
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 10),
       child: Row(
@@ -148,16 +124,16 @@ class _FollowerScreenState extends State<FollowerScreen>
               child: MaterialButton(
                 elevation: 0,
                 color:
-                    user.isTheyFollowMe ? Color(0xffeeeeee) : Color(0xffffff),
+                    user.isFollowedByMe? Color(0xffeeeeee) : Color(0xffffff),
                 onPressed: () {
                   setState(() {
-                    user.isTheyFollowMe = !user.isTheyFollowMe;
+                    user.isFollowedByMe =!user.isFollowedByMe;
                   });
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: Text(user.isTheyFollowMe ? 'Unfollow' : 'Follow',
+                child: Text(user.isFollowedByMe? 'Unfollow' : 'Follow',
                     style: TextStyle(color: Colors.black)),
               ))
         ],
