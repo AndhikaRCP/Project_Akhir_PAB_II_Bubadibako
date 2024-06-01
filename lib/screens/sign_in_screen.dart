@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/auth_services.dart'; // Import the DashboardScreen
 
 class SignInScreen extends StatefulWidget {
@@ -45,6 +44,12 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         title: const Text('Sign In'),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon panah ke belakang
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigasi ke halaman sebelumnya
+          },
+        ),
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -147,6 +152,21 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     child: const Text('Sign In'),
                   ),
+                  const SizedBox(height: 20.0),
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.of(context).pushReplacementNamed('/signUp'),
+                    child: const Text(
+                      "Belum Punya Akun? Daftar disini!",
+                      style: TextStyle(
+                        color: Colors.blue, // Warna teks
+                        fontWeight: FontWeight.bold, // Ketebalan teks
+                        fontSize: 16, // Ukuran teks
+                        decoration:
+                            TextDecoration.underline, // Garis bawah teks
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

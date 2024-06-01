@@ -50,6 +50,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
       appBar: AppBar(
         title: const Text('Sign Up'),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), // Icon panah ke belakang
+          onPressed: () {
+            Navigator.of(context).pop(); // Navigasi ke halaman sebelumnya
+          },
+        ),
       ),
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -189,6 +195,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     child: const Text('Sign Up'),
                   ),
+                  const SizedBox(height: 20.0),
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.of(context).pushReplacementNamed('/signIn'),
+                    child: const Text(
+                      "Sudah Punya Akun? Login disini!",
+                      style: TextStyle(
+                        color: Colors.blue, // Warna teks
+                        fontWeight: FontWeight.bold, // Ketebalan teks
+                        fontSize: 16, // Ukuran teks
+                        decoration:
+                            TextDecoration.underline, // Garis bawah teks
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
