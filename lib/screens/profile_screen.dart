@@ -106,11 +106,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                             height: 150.0,
                             width: 150.0,
                             color: const Color(0xffFF0E58),
-                            child: Image.network(
-                                fit: BoxFit.cover,
-                                'https://images.unsplash.com/photo-1498598457418-36ef20772bb9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                // userData['photoUrl'], // Ganti dengan URL foto pengguna
-                                ),
+                            child: CachedNetworkImage(
+                              imageUrl: penggunaData.profileImageUrl ?? '',
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Center(
+                                  child:
+                                      CircularProgressIndicator()), // Placeholder saat gambar sedang dimuat
+                              errorWidget: (context, url, error) => Center(
+                                  child: Icon(Icons
+                                      .error)), // Widget yang ditampilkan jika terjadi kesalahan
+                            ),
                           ),
                         ),
                       ),

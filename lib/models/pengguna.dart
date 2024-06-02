@@ -10,6 +10,8 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
     String? username;
     String? email;
     String? password;
+    String? profileImageUrl;
+    String? backgroundImageUrl;
     PenggunaAbout? penggunaAbout;
     List<Post>? posts;
     List<Follower>? followers;
@@ -21,6 +23,8 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
         this.username,
         this.email,
         this.password,
+        this.backgroundImageUrl,
+        this.profileImageUrl,
         this.posts,
         this.followers,
         this.following,
@@ -37,6 +41,8 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
           favorite: data['favorite'],
           followers: data['followers'],
           following: data['following'],
+          profileImageUrl: data['profileImageUrl'],
+          backgroundImageUrl: data['backgroundImageUrl'],
           penggunaAbout: data['penggunaAbout'],
           posts: data['posts']);
     }
@@ -49,6 +55,8 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
         'favorite': favorite,
         'followers': followers,
         'following': following,
+        'backgroundImageUrl':backgroundImageUrl,
+        'profileImageUrl':profileImageUrl,
         'penggunaAbout': penggunaAbout,
         'posts': posts
       };

@@ -15,10 +15,10 @@ class penggunaServices {
       _database.collection('penggunas');
   static final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  static Future<String?> uploadImage(XFile imageFile) async {
+  static Future<String?> uploadProfileImage(File imageFile, String penggunaId) async {
     try {
       String fileName = path.basename(imageFile.path);
-      Reference ref = _storage.ref().child('images/$fileName');
+      Reference ref = _storage.ref().child('penggunas/$penggunaId/$fileName');
 
       UploadTask uploadTask;
       if (kIsWeb) {
@@ -29,6 +29,7 @@ class penggunaServices {
 
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      print("BERHASIL UPLOAD IMAGE DARI PROFILE");
       return downloadUrl;
     } catch (e) {
       return null;
@@ -46,9 +47,11 @@ class penggunaServices {
 
   static Future<void> updateProfilPengguna(
       Pengguna pengguna, BuildContext context) async {
+        print( pengguna.profileImageUrl);
     Map<String, dynamic> updatedPengguna = {
       'email': pengguna.email,
       'username': pengguna.username,
+      'profileImageUrl': pengguna.profileImageUrl
     };
     try {
       await _penggunascollection
@@ -132,6 +135,7 @@ class penggunaServices {
           following: data['followings'] ?? [],
           penggunaAbout: data['penggunaAbout'],
           posts: data['posts'] ?? [],
+          profileImageUrl: data['profileImageUrl']
         );
       } else {
         return null;
