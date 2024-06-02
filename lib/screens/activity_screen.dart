@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
@@ -8,6 +9,8 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  Map<dynamic, dynamic>? dataAkunPengguna;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,75 +34,105 @@ class _ActivityScreenState extends State<ActivityScreen> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
-                return Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Bagian atas postingan: avatar, nama pengguna, waktu
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: 20.0,
-                            backgroundImage: NetworkImage(
-                              post.imageUrl![0], // Gambar avatar
-                            ),
-                          ),
-                          SizedBox(width: 8.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                               ' post.penggunaId!',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '2 hours ago', // Waktu posting
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.0),
-                      // Gambar postingan
-                      AspectRatio(
-                        aspectRatio:
-                            1/1, // Sesuaikan dengan rasio aspek gambar
-                        child: Image.network(
-                          post.imageUrl![0], // Gambar postingan
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                      // Tombol-tombol seperti, komentar, bagikan
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.favorite_border),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.mode_comment_outlined),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.share),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                print(post.toDocument());
+                print('ini ada di activity : ${post.penggunaId}');
+                return FutureBuilder<DocumentSnapshot>(
+                  future: FirebaseFirestore.instance
+                      .collection('penggunas')
+                      .doc(post.penggunaId)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return Text('Pengguna tidak ditemukan!');
+                    } else {
+                      dataAkunPengguna = snapshot.data!.data() as Map<dynamic,
+                          dynamic>; // Mengambil data dari DocumentSnapshot
+                      print(dataAkunPengguna!['username']);
+                      return buildPostItem(post, dataAkunPengguna!);
+                    }
+                  },
                 );
               },
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget buildPostItem(Post post, Map<dynamic, dynamic> userData) {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Bagian atas postingan: avatar, nama pengguna, waktu
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20.0,
+                backgroundImage: NetworkImage(
+                  post.imageUrl![0], // Gambar avatar
+                ),
+              ),
+              SizedBox(width: 8.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userData['username'] ?? '',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '2 hours ago', // Waktu posting
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 8.0),
+          // Gambar postingan
+          AspectRatio(
+            aspectRatio: 1 / 1, // Sesuaikan dengan rasio aspek gambar
+            child: Image.network(
+              post.imageUrl![0], // Gambar postingan
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          // Tombol-tombol seperti, komentar, bagikan
+          Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.favorite_border),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.mode_comment_outlined),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.share),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          // Tempat untuk menambahkan caption
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(post.caption),
+          ),
+          SizedBox(height: 15.0),
+        ],
       ),
     );
   }

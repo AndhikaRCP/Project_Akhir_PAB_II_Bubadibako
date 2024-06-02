@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
@@ -16,6 +16,7 @@ class _PostingScreenState extends State<PostingScreen> {
   final _captionController = TextEditingController();
   final List _imageList = [];
   List<File>? _imageFile = [];
+  String idPengguna = FirebaseAuth.instance.currentUser!.uid;
 
   void _showImageDialog(String imageUrl) {
     showDialog(
@@ -63,7 +64,6 @@ class _PostingScreenState extends State<PostingScreen> {
           IconButton(
             icon: const Icon(Icons.check),
             onPressed: () {
-              // Handle posting
               _handlePost();
             },
           ),
@@ -158,7 +158,11 @@ class _PostingScreenState extends State<PostingScreen> {
     print('Caption: ${_captionController.text}');
     print('Images: ${_imageList.length}');
 
-    Post newPost = Post(caption: _captionController.text, isFavorite: false, imageUrl: _imageList);
+    Post newPost = Post(
+      penggunaId: idPengguna,
+        caption: _captionController.text,
+        isFavorite: false,
+        imageUrl: _imageList);
     print(newPost.toDocument());
 
     PostServices.createPost(newPost, context, _imageFile!);

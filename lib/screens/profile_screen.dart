@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
@@ -23,7 +24,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   String idPengguna = FirebaseAuth.instance.currentUser!.uid;
-
   int _selectedIndex = 0;
   late TabController tabController;
   final AuthServices _authServices =
@@ -86,6 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               // Menampilkan pesan error jika terjadi kesalahan
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
+  print("INI ADLAAH VALUE ID PENGGUNA DARI PROFILE : ${idPengguna}");
               // Menampilkan data pengguna jika berhasil didapatkan
               final penggunaData = snapshot.data!;
               return Column(

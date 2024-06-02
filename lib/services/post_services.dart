@@ -11,19 +11,19 @@ class PostServices {
   static final CollectionReference _penggunasCollection =
       _database.collection('penggunas');
   static final FirebaseStorage _storage = FirebaseStorage.instance;
-  static String idPengguna = FirebaseAuth.instance.currentUser!.uid;
+  final String idPengguna = FirebaseAuth.instance.currentUser!.uid;
   static CollectionReference _postsCollection =
-      _penggunasCollection.doc(idPengguna).collection("posts");
+      _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
 
   // Create new post
   static Future<void> createPost(
       Post post, BuildContext context, List<File> imageFile) async {
-    print(idPengguna);
-    post.penggunaId = idPengguna;
+    print('iINI DARI BACKEND POST: ${PostServices().idPengguna}');
+    post.penggunaId = PostServices().idPengguna;
     print(post.toDocument());
     int count = 0;
     for (File imageFile in imageFile!) {
-      post.imageUrl![count] = await uploadImage(imageFile, idPengguna, count)
+      post.imageUrl![count] = await uploadImage(imageFile, PostServices().idPengguna, count)
           .whenComplete(() => print("Berhasil Upload File" + count.toString()));
       count++;
     }
