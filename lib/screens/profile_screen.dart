@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // Menampilkan indikator loading jika sedang memuat data
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               // Menampilkan pesan error jika terjadi kesalahan
               return Center(child: Text('Error: ${snapshot.error}'));
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       AspectRatio(
                         aspectRatio: 16 / 9,
                         child: Image.network(
-                          "https://images.unsplash.com/photo-1498598457418-36ef20772bb9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                          penggunaData.backgroundImageUrl ?? '',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -109,11 +109,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: CachedNetworkImage(
                               imageUrl: penggunaData.profileImageUrl ?? '',
                               fit: BoxFit.cover,
-                              placeholder: (context, url) => Center(
+                              placeholder: (context, url) => const Center(
                                   child:
                                       CircularProgressIndicator()), // Placeholder saat gambar sedang dimuat
-                              errorWidget: (context, url, error) => Center(
-                                  child: Icon(Icons
+                              errorWidget: (context, url, error) => const Center(
+                                  child:  Icon(Icons
                                       .error)), // Widget yang ditampilkan jika terjadi kesalahan
                             ),
                           ),
@@ -127,15 +127,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                           children: [
                             Text(
                               penggunaData.username ?? 'Nama Pengguna Kosong',
-                              style: TextStyle(
-                                  color: const Color.fromARGB(255, 18, 6, 6),
+                              style: const TextStyle(
+                                  color:  Color.fromARGB(255, 18, 6, 6),
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 5),
                             Text(
                               penggunaData.email ?? 'Nama Pengguna Kosong',
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 24,
                                   fontWeight: FontWeight.w500),
@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         pengguna: penggunaData,
                                       ),
                                     )),
-                                child: Text("Edit Profile"))
+                                child: const Text("Edit Profile"))
                           ],
                         ),
                       ),
@@ -261,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {
                                           // Menampilkan indikator loading saat data sedang dimuat
-                                          return CircularProgressIndicator();
+                                          return const CircularProgressIndicator();
                                         } else if (snapshot.hasError) {
                                           // Menampilkan pesan error jika terjadi kesalahan
                                           return Text(
@@ -292,7 +292,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     if (penggunaAbout
                                                             ?.imageUrl ==
                                                         null)
-                                                      CircularProgressIndicator(), // Indikator loading
+                                                      const CircularProgressIndicator(), // Indikator loading
                                                     // Memuat gambar dari URL Firebase Storage
                                                     if (penggunaAbout
                                                             ?.imageUrl !=
@@ -333,7 +333,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               );
             } else {
               // Menampilkan pesan jika tidak ada data pengguna yang ditemukan
-              return Center(child: Text('Data pengguna tidak ditemukan'));
+              return const Center(child: Text('Data pengguna tidak ditemukan'));
             }
           },
         ),

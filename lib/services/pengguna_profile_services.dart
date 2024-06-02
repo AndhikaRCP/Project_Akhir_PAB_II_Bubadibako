@@ -15,9 +15,9 @@ class penggunaServices {
       _database.collection('penggunas');
   static final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  static Future<String?> uploadProfileImage(File imageFile, String penggunaId) async {
+  static Future<String?> uploadProfileImage(
+      File imageFile, String penggunaId, String fileName) async {
     try {
-      String fileName = path.basename(imageFile.path);
       Reference ref = _storage.ref().child('penggunas/$penggunaId/$fileName');
 
       UploadTask uploadTask;
@@ -47,11 +47,12 @@ class penggunaServices {
 
   static Future<void> updateProfilPengguna(
       Pengguna pengguna, BuildContext context) async {
-        print( pengguna.profileImageUrl);
+    print(pengguna.profileImageUrl);
     Map<String, dynamic> updatedPengguna = {
       'email': pengguna.email,
       'username': pengguna.username,
-      'profileImageUrl': pengguna.profileImageUrl
+      'profileImageUrl': pengguna.profileImageUrl,
+      'backgroundImageUrl':pengguna.backgroundImageUrl
     };
     try {
       await _penggunascollection
@@ -91,12 +92,10 @@ class penggunaServices {
           'text': pengguna.penggunaAbout?.text,
           'imageUrl': pengguna.penggunaAbout?.imageUrl,
         };
-        await aboutDocRef
-            .update(updatedPengguna)
-            .whenComplete(() {
-              print("Berhasil Update About");
-              Navigator.of(context).pop();
-            });
+        await aboutDocRef.update(updatedPengguna).whenComplete(() {
+          print("Berhasil Update About");
+          Navigator.of(context).pop();
+        });
       }
     } catch (e) {
       print("Gagal mengupdate koleksi 'about': $e");
@@ -126,17 +125,17 @@ class penggunaServices {
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
         return Pengguna(
-          id: snapshot.id,
-          username: data['username'] ?? '',
-          password: data['password'] ?? '',
-          email: data['email'] ?? '',
-          favorite: data['favorite'] ?? [],
-          followers: data['followers'] ?? [],
-          following: data['followings'] ?? [],
-          penggunaAbout: data['penggunaAbout'],
-          posts: data['posts'] ?? [],
-          profileImageUrl: data['profileImageUrl']
-        );
+            id: snapshot.id,
+            username: data['username'] ?? '',
+            password: data['password'] ?? '',
+            email: data['email'] ?? '',
+            favorite: data['favorite'] ?? [],
+            followers: data['followers'] ?? [],
+            following: data['followings'] ?? [],
+            penggunaAbout: data['penggunaAbout'],
+            posts: data['posts'] ?? [],
+            profileImageUrl: data['profileImageUrl'],
+            backgroundImageUrl: data['backgroundImageUrl']);
       } else {
         return null;
       }
@@ -169,7 +168,6 @@ class penggunaServices {
   static Future<String> uploadImagePenggunaAbout(
       String userId, String aboutId, File imageFile) async {
     try {
-      
       Reference storageReference = FirebaseStorage.instance
           .ref()
           .child('penggunas/$userId/penggunaAbout/$aboutId/image.png');
