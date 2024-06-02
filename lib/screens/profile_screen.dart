@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/editProfileAbout.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/auth_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/edit_profile_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_services.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/widgets/app_bar_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -113,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   child:
                                       CircularProgressIndicator()), // Placeholder saat gambar sedang dimuat
                               errorWidget: (context, url, error) => const Center(
-                                  child:  Icon(Icons
+                                  child: Icon(Icons
                                       .error)), // Widget yang ditampilkan jika terjadi kesalahan
                             ),
                           ),
@@ -128,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             Text(
                               penggunaData.username ?? 'Nama Pengguna Kosong',
                               style: const TextStyle(
-                                  color:  Color.fromARGB(255, 18, 6, 6),
+                                  color: Color.fromARGB(255, 18, 6, 6),
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -214,19 +216,55 @@ class _ProfileScreenState extends State<ProfileScreen>
                       controller: tabController,
                       children: [
                         Center(
-                            child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  mainAxisSpacing: 2,
-                                  crossAxisSpacing: 2,
-                                  crossAxisCount: 3),
-                          itemBuilder: (context, index) {
-                            return Container(
-                              color: Colors.grey,
-                            );
-                          },
-                          itemCount: 22,
-                        )),
+                          child: StreamBuilder<List<Post>>(
+                            stream:
+                                PostServices.getPostsByUserId(idPengguna),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              }
+
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return CircularProgressIndicator(); // Menampilkan indikator loading saat data sedang dimuat.
+                                default:
+                                  if (snapshot.data!.isEmpty) {
+                                    return Text(
+                                        'Tidak ada postingan.'); // Menampilkan pesan jika tidak ada postingan.
+                                  } else {
+                                    return GridView.builder(
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        mainAxisSpacing: 2,
+                                        crossAxisSpacing: 2,
+                                        crossAxisCount: 3,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        final post = snapshot.data![index];
+                                        return Container(
+                                         child: CachedNetworkImage(
+                                                        imageUrl: post.imageUrl![0],
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
+                                                        fit: BoxFit.cover,
+                                                      ), // Contoh menampilkan judul postingan.
+                                        );
+                                      },
+                                      itemCount: snapshot.data!.length,
+                                    );
+                                  }
+                              }
+                            },
+                          ),
+                        ),
                         SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,

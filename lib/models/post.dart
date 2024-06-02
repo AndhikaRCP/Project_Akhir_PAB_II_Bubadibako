@@ -1,22 +1,22 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
   String? id;
-  final String title;
-  final String description;
-  String? imageUrl;
+  String? penggunaId;
+  final String caption;
+  List? imageUrl;
   double? latitude;
   double? longitude;
   Timestamp? createdAt;
   Timestamp? updatedAt;
   bool isFavorite;
-  final String imageAsset;
 
   Post({
     this.id,
-    required this.title,
-    required this.description,
-    required this.imageAsset,
+    this.penggunaId,
+    required this.caption,
     required this.isFavorite,
     this.imageUrl,
     this.latitude,
@@ -29,10 +29,9 @@ class Post {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Post(
       id: doc.id,
-      title: data['title'],
-      imageAsset: data['imageAsset'],
+      penggunaId: data['penggunaId'],
       isFavorite: data['isFavorite'],
-      description: data['description'],
+      caption: data['caption'],
       imageUrl: data['image_url'],
       latitude: data['latitude'] as double,
       longitude: data['longitude'] as double,
@@ -43,10 +42,9 @@ class Post {
 
   Map<String, dynamic> toDocument() {
     return {
-      'title': title,
-      'description': description,
+      'penggunaId' : penggunaId,
+      'caption': caption,
       'image_url': imageUrl,
-      'image_asset': imageAsset,
       'isFavorite': isFavorite,
       'latitude': latitude,
       'longitude': longitude,
@@ -55,12 +53,3 @@ class Post {
     };
   }
 }
-
-class Posting {
-  final String imageAsset;
-
-  Posting({required this.imageAsset});
-
-  
-}
-

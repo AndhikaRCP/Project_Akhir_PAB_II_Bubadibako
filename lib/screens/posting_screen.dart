@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
 class PostingScreen extends StatefulWidget {
   const PostingScreen({super.key});
@@ -13,7 +14,8 @@ class PostingScreen extends StatefulWidget {
 
 class _PostingScreenState extends State<PostingScreen> {
   final _captionController = TextEditingController();
-  final List<Post> _postList = [];
+  final List _imageList = [];
+  List<File>? _imageFile = [];
 
   void _showImageDialog(String imageUrl) {
     showDialog(
@@ -71,9 +73,9 @@ class _PostingScreenState extends State<PostingScreen> {
         child: Column(
           children: [
             // Display the selected gallery image in a grid
-            _postList.isNotEmpty
+            _imageList.isNotEmpty
                 ? GestureDetector(
-                    onTap: () => _showImageDialog(_postList.last.imageAsset),
+                    onTap: () => _showImageDialog(_imageList.last),
                     child: ClipRRect(
                       borderRadius:
                           BorderRadius.circular(10), // Add a rounded corner
@@ -82,7 +84,7 @@ class _PostingScreenState extends State<PostingScreen> {
                           border: Border.all(color: Colors.black, width: 1),
                         ),
                         child: Image.file(
-                          File(_postList.last.imageAsset),
+                          File(_imageList.last),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -120,12 +122,12 @@ class _PostingScreenState extends State<PostingScreen> {
               ),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: _postList.length,
+              itemCount: _imageList.length,
               itemBuilder: (context, index) {
-                final post = _postList.reversed.toList()[index];
+                final post = _imageList.reversed.toList()[index];
 
                 return GestureDetector(
-                  onTap: () => _showImageDialog(post.imageAsset),
+                  onTap: () => _showImageDialog(post),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 4),
@@ -134,7 +136,7 @@ class _PostingScreenState extends State<PostingScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6.0),
                       child: Image.file(
-                        File(post.imageAsset),
+                        File(post),
                         errorBuilder: (context, file, error) =>
                             const Icon(Icons.error),
                         fit: BoxFit.cover,
@@ -154,7 +156,12 @@ class _PostingScreenState extends State<PostingScreen> {
     // Handle posting logic here
     print('Posting...');
     print('Caption: ${_captionController.text}');
-    print('Images: ${_postList.length}');
+    print('Images: ${_imageList.length}');
+
+    Post newPost = Post(caption: _captionController.text, isFavorite: false, imageUrl: _imageList);
+    print(newPost.toDocument());
+
+    PostServices.createPost(newPost, context, _imageFile!);
   }
 
   void _handleGallery() async {
@@ -164,7 +171,8 @@ class _PostingScreenState extends State<PostingScreen> {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       setState(() {
-        _postList.add(Post(title: "Hello", description: "hello", isFavorite: false, imageAsset: image.path));
+        _imageFile!.add(File(image.path));
+        _imageList.add(image.path);
       });
     }
   }
