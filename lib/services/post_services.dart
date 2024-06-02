@@ -16,15 +16,15 @@ class PostServices {
       _penggunasCollection.doc(idPengguna).collection("posts");
 
   // Create new post
-  static Future<void> createPost(Post post, BuildContext context, List<File> imageFile) async {
+  static Future<void> createPost(
+      Post post, BuildContext context, List<File> imageFile) async {
     print(idPengguna);
     post.penggunaId = idPengguna;
     print(post.toDocument());
     int count = 0;
-    for(File imageFile in imageFile!) {
-
-      post.imageUrl![count] = await uploadImage(imageFile, idPengguna, count).whenComplete(() => 
-      print("Berhasil Upload File" + count.toString()));
+    for (File imageFile in imageFile!) {
+      post.imageUrl![count] = await uploadImage(imageFile, idPengguna, count)
+          .whenComplete(() => print("Berhasil Upload File" + count.toString()));
       count++;
     }
     try {
@@ -40,11 +40,13 @@ class PostServices {
     }
   }
 
-  static Future<String> uploadImage(File imageFile,String penggunaId, int index) async {
+  static Future<String> uploadImage(
+      File imageFile, String penggunaId, int index) async {
     try {
       String fileName = imageFile.toString() + '_image' + index.toString();
       print(fileName);
-      Reference reference = _storage.ref().child('penggunas/$penggunaId/posts/$fileName');
+      Reference reference =
+          _storage.ref().child('penggunas/$penggunaId/posts/$fileName');
       UploadTask uploadTask = reference.putFile(imageFile);
       TaskSnapshot taskSnapshot = await uploadTask;
       String imageUrl = await taskSnapshot.ref.getDownloadURL();
@@ -64,26 +66,46 @@ class PostServices {
 
   // // Read post by ID as stream
   static Stream<List<Post>> getPostsByUserId(String userId) {
-  return _postsCollection
-      .where('penggunaId', isEqualTo: userId)
-      .snapshots()
-      .map((snapshot) {
-    return snapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      return Post(
-        id: doc.id,
-        penggunaId: data['penggunaId'],
-        caption: data['caption'],
-        imageUrl: data['image_url'],
-        latitude: data['latitude'] as double?,
-        longitude: data['longitude'] as double?,
-        createdAt: data['created_at'] as Timestamp?,
-        updatedAt: data['updated_at'] as Timestamp?,
-        isFavorite: data['isFavorite'] ?? false,
-      );
-    }).toList();
-  });
-}
+    return _postsCollection
+        .where('penggunaId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return Post(
+          id: doc.id,
+          penggunaId: data['penggunaId'],
+          caption: data['caption'],
+          imageUrl: data['image_url'],
+          latitude: data['latitude'] as double?,
+          longitude: data['longitude'] as double?,
+          createdAt: data['created_at'] as Timestamp?,
+          updatedAt: data['updated_at'] as Timestamp?,
+          isFavorite: data['isFavorite'] ?? false,
+        );
+      }).toList();
+    });
+  }
+
+// Read all posts as stream
+  static Stream<List<Post>> getAllPosts() {
+    return _postsCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return Post(
+          id: doc.id,
+          penggunaId: data['penggunaId'],
+          caption: data['caption'],
+          imageUrl: List<String>.from(data['image_url']),
+          latitude: data['latitude'] as double?,
+          longitude: data['longitude'] as double?,
+          createdAt: data['created_at'] as Timestamp?,
+          updatedAt: data['updated_at'] as Timestamp?,
+          isFavorite: data['isFavorite'] ?? false,
+        );
+      }).toList();
+    });
+  }
 
   // // Update post
   // static Future<void> updatePost(Post post) async {

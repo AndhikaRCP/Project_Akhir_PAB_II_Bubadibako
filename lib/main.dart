@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           ),
           home: LandingScreen(),
           routes: {
-            '/activity': (context) => const ActivityScreen(),
+            '/activity': (context) => ActivityScreen(),
             '/detail': (context) => const DetailScreen(),
             '/favorite': (context) => FavoriteScreen(),
             '/follower': (context) => const FollowerScreen(),

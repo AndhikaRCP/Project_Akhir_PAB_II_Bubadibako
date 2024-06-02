@@ -241,6 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       itemBuilder: (context, index) {
                                         final post = snapshot.data![index];
+                                        print(post);
                                         return Container(
                                          child: CachedNetworkImage(
                                                         imageUrl: post.imageUrl![0],
