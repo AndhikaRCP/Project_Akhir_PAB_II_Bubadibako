@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/data/post_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/widgets/app_bar_widget.dart';
 
 class FavoriteScreen extends StatefulWidget {
@@ -10,84 +13,94 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  int _selectedIndex = 0;
-  // List<Post> _filteredPost = [];
-
-  @override
-  void initState() {
-    super.initState();
-    // // Populate _filteredPost with favorite posts
-    // _filteredPost = postList.where((post) => post.isFavorite).toList();
-  }
-
-  void _showImageDialog(String imageUrl) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 4),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(6.0),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  String idPengguna = FirebaseAuth.instance.currentUser!.uid;
+  // currentActivePengguna =  FirebaseFirestore.instance.doc(idPengguna).da
 
   @override
   Widget build(BuildContext context) {
-    return //Scaffold(
-    //    appBar: const AppBarWidget(title: "Favorite",),
-    //   body: Padding(
-    //     padding: const EdgeInsets.all(8.0),
-    //     child: GridView.builder(
-    //       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    //         crossAxisCount: 3,
-    //         crossAxisSpacing: 1.5,
-    //         mainAxisSpacing: 1.5,
-    //         childAspectRatio: 1.0,
-    //       ),
-    //       itemCount: _filteredPost.length,
-    //       itemBuilder: (context, index) {
-    //         return GestureDetector(
-    //           onTap: () => _showImageDialog(_filteredPost[index].imageAsset),
-    //           child: Container(
-    //             decoration: BoxDecoration(
-    //               border: Border.all(color: const Color.fromRGBO(0, 0, 0, 1), width: 4),
-    //               borderRadius: BorderRadius.circular(8.0),
-    //             ),
-    //             child: ClipRRect(
-    //               borderRadius: BorderRadius.circular(6.0),
-    //               child: CachedNetworkImage(
-    //                 imageUrl: _filteredPost[index].imageAsset,
-    //                 placeholder: (context, url) => const Center(
-    //                   child: CircularProgressIndicator(),
-    //                 ),
-    //                 errorWidget: (context, url, error) =>
-    //                     const Icon(Icons.error),
-    //                 fit: BoxFit.cover,
-    //               ),
-    //             ),
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ),
-    // );
-    Placeholder();
+    return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
+        ),
+      ),
+      appBar: const AppBarWidget(
+        title: "Profile",
+      ),
+      body: FutureBuilder<List<String>>(
+        future: FavoriteServices.getFavoritePostsById(idPengguna),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (snapshot.data!.isEmpty) {
+            return Center(child: Text('Tidak ada postingan favorit.'));
+          } else {
+            return StreamBuilder<List<Post>>(
+              stream: PostServices.getPostsByIds(snapshot.data!),
+              builder: (context, postSnapshot) {
+                if (postSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (postSnapshot.hasError) {
+                  return Center(child: Text('Error: ${postSnapshot.error}'));
+                } else if (postSnapshot.data!.isEmpty) {
+                  return Center(child: Text('Tidak ada postingan.'));
+                } else {
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      mainAxisSpacing: 2,
+                      crossAxisSpacing: 2,
+                      crossAxisCount: 3,
+                    ),
+                    itemBuilder: (context, index) {
+                      final post = postSnapshot.data![index];
+                      return GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          child: CachedNetworkImage(
+                            imageUrl: post.imageUrl![0],
+                            placeholder: (context, url) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: postSnapshot.data!.length,
+                  );
+                }
+              },
+            );
+          }
+        },
+      ),
+    );
   }
-    
-  }
+}

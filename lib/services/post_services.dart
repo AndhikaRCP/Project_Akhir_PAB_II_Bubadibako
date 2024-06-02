@@ -117,6 +117,28 @@ class PostServices {
     });
   }
 
+  static Stream<List<Post>> getPostsByIds(List<String> postIds) {
+    return _postsCollection
+        .where(FieldPath.documentId, whereIn: postIds)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return Post(
+          id: doc.id,
+          penggunaId: data['penggunaId'],
+          caption: data['caption'],
+          imageUrl: List<String>.from(data['image_url']),
+          latitude: data['latitude'] as double?,
+          longitude: data['longitude'] as double?,
+          createdAt: data['created_at'] as Timestamp?,
+          updatedAt: data['updated_at'] as Timestamp?,
+          isFavorite: data['isFavorite'] ?? false,
+        );
+      }).toList();
+    });
+  }
+
   // // Update post
   // static Future<void> updatePost(Post post) async {
   //   try {

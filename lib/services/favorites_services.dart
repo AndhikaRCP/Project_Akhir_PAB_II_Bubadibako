@@ -35,7 +35,7 @@ class FavoriteServices {
     }
   }
 
-  static Future<List<String>> getFavoritePosts(String userId) async {
+  static Future<List<String>> getFavoritePostsById(String userId) async {
     try {
       DocumentSnapshot userDoc = await _penggunasCollection.doc(userId).get();
       List<dynamic> favoritedPosts = userDoc['favorite'];
@@ -50,7 +50,7 @@ class FavoriteServices {
 
   static Future<bool> isPostFavorite(String userId, String postId) async {
     try {
-      List<String> favoritePosts = await getFavoritePosts(userId);
+      List<String> favoritePosts = await getFavoritePostsById(userId);
       print(favoritePosts.contains(postId));
       return favoritePosts.contains(postId);
     } catch (e) {

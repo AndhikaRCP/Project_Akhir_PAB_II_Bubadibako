@@ -86,7 +86,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               // Menampilkan pesan error jika terjadi kesalahan
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
-  print("INI ADLAAH VALUE ID PENGGUNA DARI PROFILE : ${idPengguna}");
+              print(
+                  "INI ADLAAH VALUE ID PENGGUNA DARI PROFILE : ${idPengguna}");
               // Menampilkan data pengguna jika berhasil didapatkan
               final penggunaData = snapshot.data!;
               return Column(
@@ -218,8 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       children: [
                         Center(
                           child: StreamBuilder<List<Post>>(
-                            stream:
-                                PostServices.getPostsByUserId(idPengguna),
+                            stream: PostServices.getPostsByUserId(idPengguna),
                             builder: (context, snapshot) {
                               if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
@@ -244,20 +244,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         final post = snapshot.data![index];
                                         print(post);
                                         return Container(
-                                         child: CachedNetworkImage(
-                                                        imageUrl: post.imageUrl![0],
-                                                        placeholder:
-                                                            (context, url) =>
-                                                                const Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        ),
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            const Icon(
-                                                                Icons.error),
-                                                        fit: BoxFit.cover,
-                                                      ), // Contoh menampilkan judul postingan.
+                                          child: CachedNetworkImage(
+                                            imageUrl: post.imageUrl![0],
+                                            placeholder: (context, url) =>
+                                                const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
+                                            fit: BoxFit.cover,
+                                          ), // Contoh menampilkan judul postingan.
                                         );
                                       },
                                       itemCount: snapshot.data!.length,
