@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
 
@@ -52,7 +50,7 @@ class penggunaServices {
       'email': pengguna.email,
       'username': pengguna.username,
       'profileImageUrl': pengguna.profileImageUrl,
-      'backgroundImageUrl':pengguna.backgroundImageUrl
+      'backgroundImageUrl': pengguna.backgroundImageUrl
     };
     try {
       await _penggunascollection
@@ -129,7 +127,6 @@ class penggunaServices {
             username: data['username'] ?? '',
             password: data['password'] ?? '',
             email: data['email'] ?? '',
-            favorite: data['favorite'] ?? [],
             followers: data['followers'] ?? [],
             following: data['followings'] ?? [],
             penggunaAbout: data['penggunaAbout'],

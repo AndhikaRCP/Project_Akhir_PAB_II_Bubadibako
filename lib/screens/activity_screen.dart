@@ -1,8 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/posting_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
@@ -51,7 +51,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       return const Text('Pengguna tidak ditemukan!');
                     } else {
                       final userData =
-                          snapshot.data!.data() as Map<dynamic, dynamic>;
+                          snapshot.data?.data() as Map<dynamic, dynamic>;
                       return buildPostItem(post, userData);
                     }
                   },
@@ -74,14 +74,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: [
               CircleAvatar(
                 radius: 20.0,
-                backgroundImage: NetworkImage(post.imageUrl![0]),
+                backgroundImage: CachedNetworkImageProvider(
+                    userData['profileImageUrl'] ?? ''),
               ),
               const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userData['username'] ?? '',
+                    userData['username'],
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
