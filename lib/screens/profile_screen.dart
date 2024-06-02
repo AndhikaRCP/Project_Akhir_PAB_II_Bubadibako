@@ -227,10 +227,10 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                               switch (snapshot.connectionState) {
                                 case ConnectionState.waiting:
-                                  return CircularProgressIndicator(); // Menampilkan indikator loading saat data sedang dimuat.
+                                  return const CircularProgressIndicator(); // Menampilkan indikator loading saat data sedang dimuat.
                                 default:
                                   if (snapshot.data!.isEmpty) {
-                                    return Text(
+                                    return const Text(
                                         'Tidak ada postingan.'); // Menampilkan pesan jika tidak ada postingan.
                                   } else {
                                     return GridView.builder(

@@ -23,7 +23,8 @@ class PostServices {
     print(post.toDocument());
     int count = 0;
     for (File imageFile in imageFile!) {
-      post.imageUrl![count] = await uploadImage(imageFile, PostServices().idPengguna, count)
+      post.imageUrl![count] = await uploadImage(
+              imageFile, PostServices().idPengguna, count)
           .whenComplete(() => print("Berhasil Upload File" + count.toString()));
       count++;
     }
@@ -37,6 +38,15 @@ class PostServices {
     } catch (e) {
       print("Error creating post: $e");
       throw Exception("Failed to create post");
+    }
+  }
+
+  static Future<void> updateIsFavorite(String postId, bool isFavorite) async {
+    try {
+      await _postsCollection.doc(postId).update({'isFavorite': isFavorite});
+    } catch (e) {
+      print("Error updating isFavorite: $e");
+      throw Exception("Failed to update isFavorite");
     }
   }
 

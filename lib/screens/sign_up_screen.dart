@@ -51,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: const Text('Sign Up'),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Icon panah ke belakang
+          icon: const Icon(Icons.arrow_back), // Icon panah ke belakang
           onPressed: () {
             Navigator.of(context).pop(); // Navigasi ke halaman sebelumnya
           },

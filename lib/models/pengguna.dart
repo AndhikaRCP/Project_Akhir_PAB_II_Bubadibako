@@ -58,7 +58,7 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
         'backgroundImageUrl':backgroundImageUrl,
         'profileImageUrl':profileImageUrl,
         'penggunaAbout': penggunaAbout,
-        'posts': posts
+        'posts': posts,
       };
     }
   }

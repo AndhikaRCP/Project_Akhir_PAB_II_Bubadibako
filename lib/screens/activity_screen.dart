@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/posting_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -9,19 +12,19 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
-  Map<dynamic, dynamic>? dataAkunPengguna;
-
+  String currentActiveUserId = FirebaseAuth.instance.currentUser!.uid;
+  bool isPostFavorite = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Instagram Feed'),
+        title: const Text('Instagram Feed'),
       ),
       body: StreamBuilder<List<Post>>(
         stream: PostServices.getAllPosts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
@@ -34,8 +37,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
-                print(post.toDocument());
-                print('ini ada di activity : ${post.penggunaId}');
                 return FutureBuilder<DocumentSnapshot>(
                   future: FirebaseFirestore.instance
                       .collection('penggunas')
@@ -43,16 +44,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return Text('Pengguna tidak ditemukan!');
+                      return const Text('Pengguna tidak ditemukan!');
                     } else {
-                      dataAkunPengguna = snapshot.data!.data() as Map<dynamic,
-                          dynamic>; // Mengambil data dari DocumentSnapshot
-                      print(dataAkunPengguna!['username']);
-                      return buildPostItem(post, dataAkunPengguna!);
+                      final userData =
+                          snapshot.data!.data() as Map<dynamic, dynamic>;
+                      return buildPostItem(post, userData);
                     }
                   },
                 );
@@ -66,72 +66,110 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   Widget buildPostItem(Post post, Map<dynamic, dynamic> userData) {
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Bagian atas postingan: avatar, nama pengguna, waktu
           Row(
             children: [
               CircleAvatar(
                 radius: 20.0,
-                backgroundImage: NetworkImage(
-                  post.imageUrl![0], // Gambar avatar
-                ),
+                backgroundImage: NetworkImage(post.imageUrl![0]),
               ),
-              SizedBox(width: 8.0),
+              const SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     userData['username'] ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    '2 hours ago', // Waktu posting
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  const Text(
+                    '2 hours ago',
+                    style: TextStyle(color: Colors.grey),
                   ),
                 ],
               ),
             ],
           ),
-          SizedBox(height: 8.0),
-          // Gambar postingan
+          const SizedBox(height: 8.0),
           AspectRatio(
-            aspectRatio: 1 / 1, // Sesuaikan dengan rasio aspek gambar
+            aspectRatio: 1 / 1,
             child: Image.network(
-              post.imageUrl![0], // Gambar postingan
+              post.imageUrl![0],
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 8.0),
-          // Tombol-tombol seperti, komentar, bagikan
+          const SizedBox(height: 8.0),
           Row(
             children: [
               IconButton(
-                icon: Icon(Icons.favorite_border),
+                icon: Icon(
+                  Icons.favorite_border,
+                  size: 45,
+                  color: post.isFavorite ? Colors.red : null,
+                ),
+                onPressed: () {
+                  // setState(() {
+                  //   post.isFavorite = !post.isFavorite;
+                  // });
+                },
+              ),
+              const SizedBox(width: 10),
+              IconButton(
+                icon: const Icon(
+                  Icons.mode_comment_outlined,
+                  size: 40,
+                ),
                 onPressed: () {},
               ),
-              IconButton(
-                icon: Icon(Icons.mode_comment_outlined),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.share),
-                onPressed: () {},
+              const Spacer(),
+              InkWell(
+                onTap: () async {
+                  isPostFavorite = await FavoriteServices.isPostFavorite(
+                      currentActiveUserId, post.id!);
+                  print("===========");
+                  print("Lama");
+                  print(isPostFavorite);
+                  setState(() {
+                    isPostFavorite = !isPostFavorite;
+                    post.isFavorite = isPostFavorite;
+                    print("Baru");
+                    print(post.isFavorite);
+
+                    // PostServices.updateIsFavorite(post.id!, post.isFavorite); <-- ini buat ngubah
+                  });
+                  if (post.isFavorite) {
+                    print('Post added to favorites.');
+                    await FavoriteServices.addToFavorites(
+                        currentActiveUserId, post.id!);
+                  } else {
+                    print('Post removed from favorites.');
+                    await FavoriteServices.removeFromFavorites(
+                        currentActiveUserId, post.id!);
+                  }
+                  isPostFavorite = post.isFavorite;
+                  print("mau masuk");
+                  print(post.isFavorite);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20),
+                  child: Icon(
+                    isPostFavorite ? Icons.star : Icons.star_border_outlined,
+                    size: 50,
+                    color: const Color.fromARGB(255, 231, 196, 0),
+                  ),
+                ),
               ),
             ],
           ),
-          // Tempat untuk menambahkan caption
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(post.caption),
           ),
-          SizedBox(height: 15.0),
+          const SizedBox(height: 15.0),
         ],
       ),
     );

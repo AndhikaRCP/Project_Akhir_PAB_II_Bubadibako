@@ -66,7 +66,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: const Text('Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -94,7 +94,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           : const CachedNetworkImageProvider(
                               'https://cdn-icons-png.flaticon.com/512/149/149071.png'),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     _openGalleryForProfile();
@@ -106,12 +106,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       widget.pengguna!.profileImageUrl = await imageUrl;
                     }
                   },
-                  child: Text('Edit Foto Profile'),
+                  child: const Text('Edit Foto Profile'),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextFormField(
                   controller: _usernameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Name',
                   ),
                   validator: (value) {
@@ -121,10 +121,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
                   ),
                   validator: (value) {
@@ -134,7 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return null;
                   },
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 InkWell(
                   onTap: _openGalleryForBackground,
                   child: ClipRRect(
@@ -156,13 +156,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               ? Image.network(
                                 fit: BoxFit.cover,
                                   widget.pengguna!.backgroundImageUrl!)
-                              : Center(
+                              : const Center(
                                   child: Text("No Image"),
                                 ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -267,7 +267,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       }
                     }
                   },
-                  child: Text('Simpan'),
+                  child: const Text('Simpan'),
                 ),
               ],
             ),

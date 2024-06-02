@@ -10,21 +10,21 @@ class DetailNotifikasi extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Detail"),
+        title: const Text("Detail"),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 notification.judul,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               Text(
                 notification.deskripsiNotifikasi,
-                style: TextStyle(fontSize: 14),
+                style: const TextStyle(fontSize: 14),
               ),
               // Tambahkan widget lainnya untuk menampilkan informasi tambahan tentang notifikasi
             ],
