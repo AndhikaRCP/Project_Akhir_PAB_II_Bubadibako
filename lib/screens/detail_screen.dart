@@ -26,7 +26,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Post'),
-          leading: IconButton(
+        leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
@@ -35,65 +35,146 @@ class _DetailScreenState extends State<DetailScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Image.network(
-                widget.post!.imageUrl![0],
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  widget.post!.caption!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          // Add this
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 5, color: Colors.black),
+                  ),
+                  child: Image.network(
+                    widget.post!.imageUrl![0],
+                    fit: BoxFit.cover,
+                    width: double.infinity,
                   ),
                 ),
-                IconButton(
-                  icon: ValueListenableBuilder<bool>(
-                    valueListenable: likeStatusNotifier,
-                    builder: (context, isLiked, child) {
-                      return Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border,
-                        size: 45,
-                        color: isLiked ? Colors.red : null,
-                      );
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 250, // set width
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Colors.black),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: Center(
+                      child: Text(
+                        widget.post!.caption!,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: ValueListenableBuilder<bool>(
+                      valueListenable: likeStatusNotifier,
+                      builder: (context, isLiked, child) {
+                        return Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          size: 45,
+                          color: isLiked ? Colors.red : null,
+                        );
+                      },
+                    ),
+                    onPressed: () {
+                      likeStatusNotifier.toggleLikeStatus();
+                      widget.post!.isFavorite = likeStatusNotifier.value;
+                      if (likeStatusNotifier.value) {
+                        print('Post added to favorites.');
+                        FavoriteServices.addToFavorites(
+                          FirebaseAuth.instance.currentUser!.uid,
+                          widget.post!.id!,
+                        );
+                      } else {
+                        print('Post removed from favorites.');
+                        FavoriteServices.removeFromFavorites(
+                          FirebaseAuth.instance.currentUser!.uid,
+                          widget.post!.id!,
+                        );
+                      }
                     },
                   ),
-                  onPressed: () {
-                    likeStatusNotifier.toggleLikeStatus();
-                    widget.post!.isFavorite = likeStatusNotifier.value;
-                    if (likeStatusNotifier.value) {
-                      print('Post added to favorites.');
-                      FavoriteServices.addToFavorites(
-                        FirebaseAuth.instance.currentUser!.uid,
-                        widget.post!.id!,
-                      );
-                    } else {
-                      print('Post removed from favorites.');
-                      FavoriteServices.removeFromFavorites(
-                        FirebaseAuth.instance.currentUser!.uid,
-                        widget.post!.id!,
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text('Latitude: ${widget.post!.latitude ?? 'N/A'}'),
-            Text('Longitude: ${widget.post!.longitude ?? 'N/A'}'),
-            Text('Created at: ${widget.post!.createdAt?.toDate() ?? 'N/A'}'),
-            Text('Updated at: ${widget.post!.updatedAt?.toDate() ?? 'N/A'}'),
-          ],
+                ],
+              ),
+              const SizedBox(height: 16),
+              Table(
+                border: TableBorder.all(width: 1, color: Colors.grey),
+                children: [
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Latitude'),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('${widget.post!.latitude}'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Longitude'),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('${widget.post!.longitude}'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Created at'),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              '${widget.post!.createdAt != null ? widget.post!.createdAt!.toDate().toString() : 'Unknown'}'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Updated at'),
+                        ),
+                      ),
+                      TableCell(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              '${widget.post!.updatedAt?.toDate() ?? 'N/A'}'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
