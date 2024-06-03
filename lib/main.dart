@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/dashboard_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/search_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           theme: themeProvider.themeData,
-          home: ActivityScreen(),
+          home: SearchScreen(),
         );
       },
     );
