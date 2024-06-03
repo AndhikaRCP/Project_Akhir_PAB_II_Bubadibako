@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FavoriteServices {
@@ -35,29 +37,43 @@ class FavoriteServices {
     }
   }
 
-  static Future<List<String>> getFavoritePostsById(String userId) async {
-    try {
-      DocumentSnapshot userDoc = await _penggunasCollection.doc(userId).get();
-      List<dynamic> favoritedPosts = userDoc['favorite'];
+static Stream<List<String>> getFavoritePostsByIdStream(String userId) {
+  StreamController<List<String>> controller = StreamController<List<String>>();
 
-      print('Daftar postingan favorit diperoleh.');
-      return favoritedPosts.cast<String>(); // Konversi ke List<String>
-    } catch (e) {
-      print('Error getting favorite posts: $e');
-      throw Exception('Failed to get favorite posts');
-    }
-  }
+  _penggunasCollection.doc(userId).snapshots().listen((DocumentSnapshot userDoc) {
+    List<dynamic> favoritedPosts = userDoc['favorite'];
+    print('Daftar postingan favorit diperoleh.');
+    controller.add(favoritedPosts.cast<String>());
+  }, onError: (error) {
+    print('Error getting favorite posts: $error');
+    controller.addError('Failed to get favorite posts');
+  });
 
-  static Future<bool> isPostFavorite(String userId, String postId) async {
-    try {
-      List<String> favoritePosts = await getFavoritePostsById(userId);
-      print(favoritePosts.contains(postId));
-      return favoritePosts.contains(postId);
-    } catch (e) {
-      print('Error checking if post is favorite: $e');
-      throw Exception('Failed to check if post is favorite');
-    }
+  return controller.stream;
+}
+
+static Stream<bool> isPostFavoriteStream(String userId, String postId) {
+  return getFavoritePostsByIdStream(userId).map((favoritePosts) {
+    return favoritePosts.contains(postId);
+  }).handleError((error) {
+    print('Error checking if post is favorite: $error');
+    throw Exception('Failed to check if post is favorite');
+  });
+}
+
+static Future<List<String>> getFavoritePostsById(String userId) async {
+  try {
+    DocumentSnapshot userDoc = await _penggunasCollection.doc(userId).get();
+    List<dynamic> favoritedPosts = userDoc['favorite'];
+
+    print('Daftar postingan favorit diperoleh.');
+    return favoritedPosts.cast<String>(); // Konversi ke List<String>
+  } catch (e) {
+    print('Error getting favorite posts: $e');
+    throw Exception('Failed to get favorite posts');
   }
+}
+
 
   static Future<void> removeFromFavorites(String userId, String postId) async {
     try {

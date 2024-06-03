@@ -14,6 +14,7 @@ class ActivityScreen extends StatefulWidget {
 class _ActivityScreenState extends State<ActivityScreen> {
   String currentActiveUserId = FirebaseAuth.instance.currentUser!.uid;
   bool isPostFavorite = false;
+  bool isLike = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +22,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         title: const Text('Instagram Feed'),
       ),
       body: StreamBuilder<List<Post>>(
-        stream: PostServices.getAllPosts(),
+        stream: PostServices.getAllPosts(currentActiveUserId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -98,9 +99,21 @@ class _ActivityScreenState extends State<ActivityScreen> {
           const SizedBox(height: 8.0),
           AspectRatio(
             aspectRatio: 1 / 1,
-            child: Image.network(
-              post.imageUrl![0],
+            child: CachedNetworkImage(
+              imageUrl: post.imageUrl![0] ?? 'https://via.placeholder.com/300x300.png?text=Sedang Memuat Gambar...',
               fit: BoxFit.cover,
+              placeholder: (context, url) => const SizedBox(
+                width: 50.0, // Lebar kotak tempat indicator berada
+                height: 50.0, // Tinggi kotak tempat indicator berada
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.0, // Lebar garis progress
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.blue), // Warna garis progress
+                  ),
+                ),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           ),
           const SizedBox(height: 8.0),
@@ -108,14 +121,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
             children: [
               IconButton(
                 icon: Icon(
-                  Icons.favorite_border,
+                  isLike ? Icons.favorite : Icons.favorite_border,
                   size: 45,
                   color: post.isFavorite ? Colors.red : null,
                 ),
                 onPressed: () {
-                  // setState(() {
-                  //   post.isFavorite = !post.isFavorite;
-                  // });
+                  setState(() {
+                    isLike = !isLike;
+                  });
                 },
               ),
               const SizedBox(width: 10),
@@ -127,20 +140,16 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 onPressed: () {},
               ),
               const Spacer(),
-              InkWell(
-                onTap: () async {
-                  isPostFavorite = await FavoriteServices.isPostFavorite(
-                      currentActiveUserId, post.id!);
-                  print("===========");
-                  print("Lama");
-                  print(isPostFavorite);
+              IconButton(
+                icon: Icon(
+                  post.isFavorite ? Icons.star : Icons.star_border,
+                  size: 45,
+                  color:
+                      post.isFavorite ? Color.fromARGB(255, 231, 212, 0) : null,
+                ),
+                onPressed: () async {
                   setState(() {
-                    isPostFavorite = !isPostFavorite;
-                    post.isFavorite = isPostFavorite;
-                    print("Baru");
-                    print(post.isFavorite);
-
-                    // PostServices.updateIsFavorite(post.id!, post.isFavorite); <-- ini buat ngubah
+                    post.isFavorite = !post.isFavorite;
                   });
                   if (post.isFavorite) {
                     print('Post added to favorites.');
@@ -151,18 +160,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     await FavoriteServices.removeFromFavorites(
                         currentActiveUserId, post.id!);
                   }
-                  isPostFavorite = post.isFavorite;
-                  print("mau masuk");
-                  print(post.isFavorite);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20),
-                  child: Icon(
-                    isPostFavorite ? Icons.star : Icons.star_border_outlined,
-                    size: 50,
-                    color: const Color.fromARGB(255, 231, 196, 0),
-                  ),
-                ),
               ),
             ],
           ),

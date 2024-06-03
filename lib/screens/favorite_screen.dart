@@ -53,21 +53,21 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         future: FavoriteServices.getFavoritePostsById(idPengguna),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.data!.isEmpty) {
-            return Center(child: Text('Tidak ada postingan favorit.'));
+            return const Center(child: Text('Tidak ada postingan favorit.'));
           } else {
             return StreamBuilder<List<Post>>(
               stream: PostServices.getPostsByIds(snapshot.data!),
               builder: (context, postSnapshot) {
                 if (postSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (postSnapshot.hasError) {
                   return Center(child: Text('Error: ${postSnapshot.error}'));
                 } else if (postSnapshot.data!.isEmpty) {
-                  return Center(child: Text('Tidak ada postingan.'));
+                  return const Center(child: Text('Tidak ada postingan.'));
                 } else {
                   return GridView.builder(
                     gridDelegate:
