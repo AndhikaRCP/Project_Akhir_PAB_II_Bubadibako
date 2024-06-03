@@ -13,7 +13,6 @@ class PostingScreen extends StatefulWidget {
 }
 
 class _PostingScreenState extends State<PostingScreen> {
-  final _titleController = TextEditingController();
   final _captionController = TextEditingController();
   final List _imageList = [];
   List<File>? _imageFile = [];
@@ -92,16 +91,6 @@ class _PostingScreenState extends State<PostingScreen> {
                     ),
                   )
                 : const SizedBox.shrink(),
-                Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  hintText: 'Masukkan Title anda...',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextField(
@@ -171,7 +160,6 @@ class _PostingScreenState extends State<PostingScreen> {
 
     Post newPost = Post(
       penggunaId: idPengguna,
-      title: _titleController.text,
         caption: _captionController.text,
         isFavorite: false,
         imageUrl: _imageList);

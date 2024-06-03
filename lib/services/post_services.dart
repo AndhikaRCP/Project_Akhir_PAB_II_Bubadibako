@@ -87,7 +87,6 @@ class PostServices {
         return Post(
           id: doc.id,
           penggunaId: data['penggunaId'],
-          title: data['title'],
           caption: data['caption'],
           imageUrl: data['image_url'],
           latitude: data['latitude'] as double?,
@@ -109,7 +108,6 @@ static Stream<List<Post>> getAllPosts(currentActivePenggunaId) {
       return Post(
         id: doc.id,
         penggunaId: data['penggunaId'],
-        title: data['title'],
         caption: data['caption'],
         imageUrl: List<String>.from(data['image_url']),
         latitude: data['latitude'] as double?,
@@ -134,7 +132,6 @@ static Stream<List<Post>> getAllPosts(currentActivePenggunaId) {
           id: doc.id,
           penggunaId: data['penggunaId'],
           caption: data['caption'],
-          title: data['title'],
           imageUrl: List<String>.from(data['image_url']),
           latitude: data['latitude'] as double?,
           longitude: data['longitude'] as double?,

@@ -84,7 +84,7 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         child: Center(
           child: Text(
-            widget.post.title,
+            widget.post.caption,
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -166,7 +166,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            '${widget.post.createdAt != null ? widget.post.createdAt!.toDate().toString() : 'Unknown'}'),
+                              '${widget.post.createdAt != null ? widget.post.createdAt!.toDate().toString() : 'Unknown'}'),
                         ),
                       ),
                     ],
@@ -184,18 +184,6 @@ class _DetailScreenState extends State<DetailScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                               '${widget.post.updatedAt != null ? widget.post.updatedAt!.toDate().toString() : 'Unknown'}'),
-                        ),
-                      ),
-                    ],
-                  ),
-                         TableRow(
-                    children: [
-              
-                      TableCell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                              '${widget.post.caption}'),
                         ),
                       ),
                     ],
