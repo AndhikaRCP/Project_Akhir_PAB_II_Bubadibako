@@ -6,6 +6,14 @@ import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
+class LikeStatusNotifier extends ValueNotifier<bool> {
+  LikeStatusNotifier(bool isLiked) : super(isLiked);
+
+  void toggleLikeStatus() {
+    value = !value;
+  }
+}
+
 class ActivityScreen extends StatefulWidget {
   @override
   _ActivityScreenState createState() => _ActivityScreenState();
@@ -15,6 +23,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
   String currentActiveUserId = FirebaseAuth.instance.currentUser!.uid;
   bool isPostFavorite = false;
   bool isLike = false;
+
+  late Map<String, LikeStatusNotifier> _likeStatusNotifiers;
+
+  @override
+  void initState() {
+    super.initState();
+    _likeStatusNotifiers = {}; // Inisialisasi Map
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +55,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
+                final likeStatusNotifier = _likeStatusNotifiers.putIfAbsent(
+                  post.id!, // Gunakan id post sebagai kunci
+                  () => LikeStatusNotifier(post.isFavorite), // Buat LikeStatusNotifier baru jika belum ada
+                );
                 return FutureBuilder<DocumentSnapshot>(
                   future: FirebaseFirestore.instance
                       .collection('penggunas')
@@ -53,7 +74,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     } else {
                       final userData =
                           snapshot.data?.data() as Map<dynamic, dynamic>;
-                      return buildPostItem(post, userData);
+                      return buildPostItem(post, userData, likeStatusNotifier);
                     }
                   },
                 );
@@ -65,7 +86,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     );
   }
 
-  Widget buildPostItem(Post post, Map<dynamic, dynamic> userData) {
+  Widget buildPostItem(Post post, Map<dynamic, dynamic> userData, LikeStatusNotifier likeStatusNotifier) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -100,7 +121,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
           AspectRatio(
             aspectRatio: 1 / 1,
             child: CachedNetworkImage(
-              imageUrl: post.imageUrl![0] ?? 'https://via.placeholder.com/300x300.png?text=Sedang Memuat Gambar...',
+              imageUrl: post.imageUrl![0] ??
+                  'https://via.placeholder.com/300x300.png?text=Sedang Memuat Gambar...',
               fit: BoxFit.cover,
               placeholder: (context, url) => const SizedBox(
                 width: 50.0, // Lebar kotak tempat indicator berada
@@ -120,15 +142,32 @@ class _ActivityScreenState extends State<ActivityScreen> {
           Row(
             children: [
               IconButton(
-                icon: Icon(
-                  isLike ? Icons.favorite : Icons.favorite_border,
-                  size: 45,
-                  color: post.isFavorite ? Colors.red : null,
+                icon: ValueListenableBuilder<bool>(
+                  valueListenable: likeStatusNotifier,
+                  builder: (context, isLiked, child) {
+                    return Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border,
+                      size: 45,
+                      color: post.isFavorite ? Colors.red : null,
+                    );
+                  },
                 ),
                 onPressed: () {
-                  setState(() {
-                    isLike = !isLike;
-                  });
+                  likeStatusNotifier.toggleLikeStatus();
+                  post.isFavorite = likeStatusNotifier.value; // Update post.isFavorite based on likeStatusNotifier
+                  if (likeStatusNotifier.value) {
+                    print('Post added to favorites.');
+                    FavoriteServices.addToFavorites(
+                      currentActiveUserId,
+                      post.id!,
+                    );
+                  } else {
+                    print('Post removed from favorites.');
+                    FavoriteServices.removeFromFavorites(
+                      currentActiveUserId,
+                      post.id!,
+                    );
+                  }
                 },
               ),
               const SizedBox(width: 10),
@@ -138,29 +177,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   size: 40,
                 ),
                 onPressed: () {},
-              ),
-              const Spacer(),
-              IconButton(
-                icon: Icon(
-                  post.isFavorite ? Icons.star : Icons.star_border,
-                  size: 45,
-                  color:
-                      post.isFavorite ? Color.fromARGB(255, 231, 212, 0) : null,
-                ),
-                onPressed: () async {
-                  setState(() {
-                    post.isFavorite = !post.isFavorite;
-                  });
-                  if (post.isFavorite) {
-                    print('Post added to favorites.');
-                    await FavoriteServices.addToFavorites(
-                        currentActiveUserId, post.id!);
-                  } else {
-                    print('Post removed from favorites.');
-                    await FavoriteServices.removeFromFavorites(
-                        currentActiveUserId, post.id!);
-                  }
-                },
               ),
             ],
           ),
