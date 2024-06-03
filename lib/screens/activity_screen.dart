@@ -39,7 +39,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         title: const Text('Instagram Feed'),
       ),
       body: StreamBuilder<List<Post>>(
-        stream: PostServices.getAllPosts(currentActiveUserId),
+        stream: PostServices().getAllPosts(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(

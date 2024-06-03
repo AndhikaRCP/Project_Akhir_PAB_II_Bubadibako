@@ -39,6 +39,7 @@ class penggunaServices {
     await _database.collection('penggunas').doc(penggunaId).set({
       'username': penggunaname,
       'email': email,
+      'favorite': []
     });
     return null;
   }
