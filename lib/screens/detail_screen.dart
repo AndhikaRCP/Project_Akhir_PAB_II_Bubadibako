@@ -137,7 +137,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       TableCell(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('${widget.post!.latitude}'),
+                          child: Text('${widget.post!.latitude ?? 'N/A'}'),
                         ),
                       ),
                     ],
@@ -153,7 +153,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       TableCell(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('${widget.post!.longitude}'),
+                          child: Text('${widget.post!.longitude ?? 'N/A'}'),
                         ),
                       ),
                     ],
@@ -170,7 +170,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                              '${widget.post!.createdAt != null ? widget.post!.createdAt!.toDate().toString() : 'Unknown'}'),
+                              '${widget.post!.createdAt?.toDate() ?? 'N/A'}'),
                         ),
                       ),
                     ],
