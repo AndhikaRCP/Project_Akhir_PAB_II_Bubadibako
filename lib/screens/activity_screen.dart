@@ -58,7 +58,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 final post = posts[index];
                 final likeStatusNotifier = _likeStatusNotifiers.putIfAbsent(
                   post.id!, // Gunakan id post sebagai kunci
-                  () => LikeStatusNotifier(post.isFavorite), // Buat LikeStatusNotifier baru jika belum ada
+                  () => LikeStatusNotifier(post
+                      .isFavorite), // Buat LikeStatusNotifier baru jika belum ada
                 );
                 return FutureBuilder<DocumentSnapshot>(
                   future: FirebaseFirestore.instance
@@ -87,7 +88,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
     );
   }
 
-  Widget buildPostItem(Post post, Map<dynamic, dynamic> userData, LikeStatusNotifier likeStatusNotifier) {
+  Widget buildPostItem(Post post, Map<dynamic, dynamic> userData,
+      LikeStatusNotifier likeStatusNotifier) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -98,7 +100,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
               CircleAvatar(
                 radius: 20.0,
                 backgroundImage: CachedNetworkImageProvider(
-                    userData['profileImageUrl'] ?? 'https://www.gravatar.com/avatar/HASH?s=200&d=mp'),
+                    userData['profileImageUrl'] ??
+                        'https://www.gravatar.com/avatar/HASH?s=200&d=mp'),
               ),
               const SizedBox(width: 8.0),
               Column(
@@ -155,7 +158,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 ),
                 onPressed: () {
                   likeStatusNotifier.toggleLikeStatus();
-                  post.isFavorite = likeStatusNotifier.value; // Update post.isFavorite based on likeStatusNotifier
+                  post.isFavorite = likeStatusNotifier
+                      .value; // Update post.isFavorite based on likeStatusNotifier
                   if (likeStatusNotifier.value) {
                     print('Post added to favorites.');
                     FavoriteServices.addToFavorites(
@@ -184,22 +188,21 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   Icons.map_sharp,
                   size: 40,
                 ),
-                onPressed: post.latitude != null &&
-                                        post.longitude != null
-                                    ?() {
-                                       // _launchMaps(document.latitude!,
-                                        //     document.longitude!);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => GoogleMapsScreen(
-                                              latitude: post.latitude!,
-                                              longitude: post.longitude!,
-                                            ),
-                                          ),
-                                        );
-
-                                    } : null,
+                onPressed: post.latitude != null && post.longitude != null
+                    ? () {
+                        // _launchMaps(document.latitude!,
+                        //     document.longitude!);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GoogleMapsScreen(
+                              latitude: post.latitude!,
+                              longitude: post.longitude!,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
               ),
             ],
           ),

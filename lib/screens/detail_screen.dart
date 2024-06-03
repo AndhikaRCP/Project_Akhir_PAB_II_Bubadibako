@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/google_maps_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_services.dart';
 
@@ -16,20 +18,20 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   late LikeStatusNotifier likeStatusNotifier;
-    String currentActivePengunaId = FirebaseAuth.instance.currentUser!.uid;
+  String currentActivePengunaId = FirebaseAuth.instance.currentUser!.uid;
 
-   @override
+  @override
   void initState() {
     super.initState();
     _initializeLikeStatus();
   }
 
-  
-
   void _initializeLikeStatus() async {
-    Pengguna? currentActivePengguna = await penggunaServices.getpenggunaById(currentActivePengunaId).first;
+    Pengguna? currentActivePengguna =
+        await penggunaServices.getpenggunaById(currentActivePengunaId).first;
     if (currentActivePengguna != null) {
-      bool isFavorite = currentActivePengguna.favorite!.contains(widget.post!.id);
+      bool isFavorite =
+          currentActivePengguna.favorite!.contains(widget.post!.id);
       print(isFavorite);
       setState(() {
         likeStatusNotifier = LikeStatusNotifier(isFavorite);
@@ -47,7 +49,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Post'),
-          leading: IconButton(
+        leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
@@ -59,6 +61,59 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            FutureBuilder<DocumentSnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection('penggunas')
+                  .doc(widget.post!.penggunaId)
+                  .get(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData || !snapshot.data!.exists) {
+                  return Text('Pengguna tidak ditemukan!');
+                } else {
+                  final userData =
+                      snapshot.data!.data() as Map<dynamic, dynamic>;
+                  // Tampilkan foto profil dan username di sini
+                  return Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 20.0,
+                        backgroundImage: NetworkImage(userData['profileImageUrl']),
+                      ),
+                      SizedBox(width: 15.0, height: 30,),
+
+                      Text(
+                        userData['username'],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              },
+            ),
+             SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Longitude   : ${widget.post?.longitude}',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              'Lattitude     : ${widget.post?.latitude}',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             AspectRatio(
               aspectRatio: 1,
               child: Image.network(
@@ -74,7 +129,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Text(
                   widget.post!.caption!,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -107,13 +162,32 @@ class _DetailScreenState extends State<DetailScreen> {
                     }
                   },
                 ),
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(
+                    Icons.map_sharp,
+                    size: 40,
+                  ),
+                  onPressed: widget.post!.latitude != null &&
+                          widget.post!.longitude != null
+                      ? () {
+                          // _launchMaps(document.latitude!,
+                          //     document.longitude!);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GoogleMapsScreen(
+                                latitude: widget.post!.latitude!,
+                                longitude: widget.post!.longitude!,
+                              ),
+                            ),
+                          );
+                        }
+                      : null,
+                ),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Latitude: ${widget.post!.latitude ?? 'N/A'}'),
-            Text('Longitude: ${widget.post!.longitude ?? 'N/A'}'),
-            Text('Created at: ${widget.post!.createdAt?.toDate() ?? 'N/A'}'),
-            Text('Updated at: ${widget.post!.updatedAt?.toDate() ?? 'N/A'}'),
           ],
         ),
       ),
