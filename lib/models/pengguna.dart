@@ -1,6 +1,5 @@
   import 'package:cloud_firestore/cloud_firestore.dart';
   import 'package:project_akhir_pab_ii_bubadibako/models/Following.dart';
-  import 'package:project_akhir_pab_ii_bubadibako/models/favorite.dart';
   import 'package:project_akhir_pab_ii_bubadibako/models/follower.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
   import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
@@ -16,7 +15,7 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
     List<Post>? posts;
     List<Follower>? followers;
     List<Following>? following;
-    List<Favorite>? favorite;
+    List? favorite;
 
     Pengguna(
         {this.id,
