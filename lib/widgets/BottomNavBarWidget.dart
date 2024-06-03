@@ -18,7 +18,7 @@ class _MyButtomNavBarState extends State<BottomNavBarWidget> {
     ActivityScreen(),
     PostingScreen(),
     FavoriteScreen(),
-    NotificationScreen(),
+    // NotificationScreen(),
     ProfileScreen(),
   ];
   @override
@@ -50,8 +50,8 @@ class _MyButtomNavBarState extends State<BottomNavBarWidget> {
                 BottomNavigationBarItem(icon: Icon(Icons.upload_rounded), label: "Upload"),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.favorite), label: "Favorite"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.message), label: "Notification"),
+                // BottomNavigationBarItem(
+                //     icon: Icon(Icons.message), label: "Notification"),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.person_outline), label: "Profile"),
               ]),

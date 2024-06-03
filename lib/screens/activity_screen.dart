@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/google_maps_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
@@ -177,6 +178,28 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   size: 40,
                 ),
                 onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.map_sharp,
+                  size: 40,
+                ),
+                onPressed: post.latitude != null &&
+                                        post.longitude != null
+                                    ?() {
+                                       // _launchMaps(document.latitude!,
+                                        //     document.longitude!);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => GoogleMapsScreen(
+                                              latitude: post.latitude!,
+                                              longitude: post.longitude!,
+                                            ),
+                                          ),
+                                        );
+
+                                    } : null,
               ),
             ],
           ),

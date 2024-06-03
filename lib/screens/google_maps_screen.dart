@@ -47,7 +47,8 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Google Maps'),
+        title:  Text('Google Maps ( ${widget.latitude} , ${widget.longitude} )'),
+        
       ),
       body: GoogleMap(
         myLocationEnabled: true,
@@ -63,9 +64,10 @@ class _GoogleMapsScreenState extends State<GoogleMapsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Color.fromARGB(255, 255, 104, 104),
         onPressed: _goToLocation,
-        label: const Text('To the location!'),
-        icon: const Icon(Icons.directions_car),
+        label: const Text('Lihat Lokasi'),
+        icon: const Icon(Icons.directions),
       ),
     );
   }
