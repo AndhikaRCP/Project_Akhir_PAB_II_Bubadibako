@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/favorites_services.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_services.dart';
 
 class DetailScreen extends StatefulWidget {
   final Post? post;
@@ -14,11 +16,30 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   late LikeStatusNotifier likeStatusNotifier;
+    String currentActivePengunaId = FirebaseAuth.instance.currentUser!.uid;
 
-  @override
+   @override
   void initState() {
     super.initState();
-    likeStatusNotifier = LikeStatusNotifier(!widget.post!.isFavorite);
+    _initializeLikeStatus();
+  }
+
+  
+
+  void _initializeLikeStatus() async {
+    Pengguna? currentActivePengguna = await penggunaServices.getpenggunaById(currentActivePengunaId).first;
+    if (currentActivePengguna != null) {
+      bool isFavorite = currentActivePengguna.favorite!.contains(widget.post!.id);
+      print(isFavorite);
+      setState(() {
+        likeStatusNotifier = LikeStatusNotifier(isFavorite);
+      });
+    } else {
+      // Handle case when pengguna is not found
+      setState(() {
+        likeStatusNotifier = LikeStatusNotifier(false);
+      });
+    }
   }
 
   @override
