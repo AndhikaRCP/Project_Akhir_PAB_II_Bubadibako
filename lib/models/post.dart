@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Post {
   String? id;
   String? penggunaId;
+   final String title;
   final String caption;
   List? imageUrl;
   double? latitude;
@@ -16,6 +17,7 @@ class Post {
   Post({
     this.id,
     this.penggunaId,
+    required this.title,
     required this.caption,
     required this.isFavorite,
     this.imageUrl,
@@ -31,6 +33,7 @@ class Post {
       id: doc.id,
       penggunaId: data['penggunaId'],
       isFavorite: data['isFavorite'],
+      title: data['title'],
       caption: data['caption'],
       imageUrl: data['image_url'],
       latitude: data['latitude'] as double,

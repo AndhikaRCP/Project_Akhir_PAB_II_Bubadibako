@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/pengguna.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/editProfileAbout.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
@@ -243,19 +244,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       itemBuilder: (context, index) {
                                         final post = snapshot.data![index];
                                         print(post);
-                                        return Container(
-                                          child: CachedNetworkImage(
-                                            imageUrl: post.imageUrl![0],
-                                            placeholder: (context, url) =>
-                                                const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // Navigate to detail screen
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailScreen(post: post, pengguna:penggunaData),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            child: CachedNetworkImage(
+                                              imageUrl: post.imageUrl![0],
+                                              placeholder: (context, url) =>
+                                                  const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                              fit: BoxFit.cover,
                                             ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                            fit: BoxFit.cover,
-                                          ), // Contoh menampilkan judul postingan.
+                                          ),
                                         );
                                       },
                                       itemCount: snapshot.data!.length,

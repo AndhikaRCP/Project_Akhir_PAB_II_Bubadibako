@@ -47,7 +47,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         ),
       ),
       appBar: const AppBarWidget(
-        title: "Profile",
+        title: "Favorite",
       ),
       body: FutureBuilder<List<String>>(
         future: FavoriteServices.getFavoritePostsById(idPengguna),
