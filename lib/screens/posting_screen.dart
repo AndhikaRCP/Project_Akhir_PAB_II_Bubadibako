@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
+import 'package:project_akhir_pab_ii_bubadibako/services/location_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/post_services.dart';
 
 class PostingScreen extends StatefulWidget {
@@ -159,7 +160,7 @@ class _PostingScreenState extends State<PostingScreen> {
     print('Images: ${_imageList.length}');
 
     Post newPost = Post(
-      penggunaId: idPengguna,
+        penggunaId: idPengguna,
         caption: _captionController.text,
         isFavorite: false,
         imageUrl: _imageList);

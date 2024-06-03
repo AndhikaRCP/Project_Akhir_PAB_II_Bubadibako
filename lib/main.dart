@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/edit_profile_screen.dart';
@@ -18,6 +22,11 @@ import 'package:project_akhir_pab_ii_bubadibako/widgets/BottomNavBarWidget.dart'
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
+    await FlutterConfig.loadEnvVariables();
+  }
+
   runApp(MyApp());
 }
 
