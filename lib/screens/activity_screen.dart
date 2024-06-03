@@ -97,7 +97,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
               CircleAvatar(
                 radius: 20.0,
                 backgroundImage: CachedNetworkImageProvider(
-                    userData['profileImageUrl'] ?? ''),
+                    userData['profileImageUrl'] ?? 'https://www.gravatar.com/avatar/HASH?s=200&d=mp'),
               ),
               const SizedBox(width: 8.0),
               Column(

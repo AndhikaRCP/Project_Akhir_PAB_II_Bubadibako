@@ -96,12 +96,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                   Stack(
                     children: [
                       AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: Image.network(
-                          penggunaData.backgroundImageUrl ?? '',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                          aspectRatio: 16 / 9,
+                          child: CachedNetworkImage(
+                            imageUrl: penggunaData.backgroundImageUrl ??
+                                "https://images.unsplash.com/photo-1626624340240-aadc087844fa?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            placeholder: (context, url) => SizedBox(
+                              width: 10,
+                              height: 10,
+                              child:
+                                  CircularProgressIndicator(strokeWidth: 2.0),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          )),
                       Positioned(
                         left: 25,
                         bottom: 25,
@@ -112,7 +120,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                             width: 150.0,
                             color: const Color(0xffFF0E58),
                             child: CachedNetworkImage(
-                              imageUrl: penggunaData.profileImageUrl ?? '',
+                              imageUrl: penggunaData.profileImageUrl ??
+                                  "https://www.gravatar.com/avatar/HASH?s=200&d=mp",
                               fit: BoxFit.cover,
                               placeholder: (context, url) => const Center(
                                   child:

@@ -47,7 +47,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         ),
       ),
       appBar: const AppBarWidget(
-        title: "Profile",
+        title: "Favorite",
       ),
       body: StreamBuilder<List<String>>(
         stream: FavoriteServices.getFavoritePostsByIdStream(idPengguna),

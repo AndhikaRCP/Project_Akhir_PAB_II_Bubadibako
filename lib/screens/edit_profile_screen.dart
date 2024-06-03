@@ -82,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundImage: imageFileForProfile != null
                       ? Image.file(
                           imageFileForProfile!,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
                             return const Center(
                                 child: Text('Failed to load image'));
@@ -140,8 +140,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Container(
-                      width: 100,
-                      height: 100,
+                      width: 400,
+                      height: 400,
                       color: Colors.grey,
                       child: imageFileForBackground != null
                           ? Image.file(
@@ -154,7 +154,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             )
                           : widget.pengguna!.backgroundImageUrl != null
                               ? Image.network(
-                                fit: BoxFit.cover,
+                                  fit: BoxFit.cover,
                                   widget.pengguna!.backgroundImageUrl!)
                               : const Center(
                                   child: Text("No Image"),
