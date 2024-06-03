@@ -11,41 +11,24 @@ class PostServices {
   static final CollectionReference _penggunasCollection =
       _database.collection('penggunas');
   static final FirebaseStorage _storage = FirebaseStorage.instance;
-  final String idPengguna = FirebaseAuth.instance.currentUser!.uid;
+  final String currentActivePenggunaId = FirebaseAuth.instance.currentUser!.uid;
   static CollectionReference _postsCollection =
-      _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
+      _database.collection("posts");
 
-  // Create new post
   Future<void> createPost(
-      Post post, BuildContext context, List<File> imageFile) async {
-    CollectionReference _postCollectionForCreatePost =
-        _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
-
-    print('INI ID PENGGUNA DI POST  :${idPengguna}');
-    print('iINI DARI BACKEND POST: ${PostServices().idPengguna}');
-    post.penggunaId = PostServices().idPengguna;
-    print(post.toDocument());
-    int count = 0;
-    for (File imageFile in imageFile!) {
+      Post post, BuildContext context, List<File> imageFile ) async {
+            int count = 0;
+    for (File imageFile in imageFile) {
       post.imageUrl![count] =
-          await uploadImage(imageFile, PostServices().idPengguna, count)
+          await uploadImage(imageFile, PostServices().currentActivePenggunaId, count)
               .whenComplete(() {
         print("Berhasil Upload File" + count.toString());
       });
       count++;
     }
-    try {
-      await _postCollectionForCreatePost
-          .add(post.toDocument())
-          .whenComplete(() {
-        print("Berhasil Memposting! sukses");
-        Navigator.of(context).pushReplacementNamed('/bottomNav');
-      });
-    } catch (e) {
-      print("Error creating post: $e");
-      throw Exception("Failed to create post");
-    }
+    await _database.collection('posts').add(post.toDocument()).whenComplete(() =>  Navigator.of(context).pushReplacementNamed('/bottomNav'));
   }
+
 
   static Future<void> updateIsFavorite(String postId, bool isFavorite) async {
     try {
@@ -56,13 +39,14 @@ class PostServices {
     }
   }
 
+
   static Future<String> uploadImage(
       File imageFile, String penggunaId, int index) async {
     try {
       String fileName = imageFile.toString() + '_image' + index.toString();
       print(fileName);
       Reference reference =
-          _storage.ref().child('penggunas/$penggunaId/posts/$fileName');
+          _storage.ref().child('posts/$fileName');
       UploadTask uploadTask = reference.putFile(imageFile);
       TaskSnapshot taskSnapshot = await uploadTask;
       String imageUrl = await taskSnapshot.ref.getDownloadURL();
@@ -73,14 +57,6 @@ class PostServices {
     }
   }
 
-  // // Read all posts as stream
-  // static Stream<List<Post>> getAllPosts() {
-  //   return _postsCollection.snapshots().map((snapshot) {
-  //     return snapshot.docs.map((doc) => Post.fromDocument(doc)).toList();
-  //   });
-  // }
-
-  // // Read post by ID as stream
   static Stream<List<Post>> getPostsByUserId(String userId) {
     return _postsCollection
         .where('penggunaId', isEqualTo: userId)
@@ -107,7 +83,7 @@ class PostServices {
   Stream<List<Post>> getAllPosts() {
     bool isFavorite = false;
     List isFavoriteList = [];
-    _penggunasCollection.doc(idPengguna).snapshots().listen((snapshot) {
+    _penggunasCollection.doc(currentActivePenggunaId).snapshots().listen((snapshot) {
       Map<String, dynamic> dataPengguna =
           snapshot.data() as Map<String, dynamic>;
       isFavoriteList = dataPengguna['favorite'];
