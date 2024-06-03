@@ -131,6 +131,7 @@ class penggunaServices {
             followers: data['followers'] ?? [],
             following: data['followings'] ?? [],
             penggunaAbout: data['penggunaAbout'],
+            favorite: data['favorite'],
             posts: data['posts'] ?? [],
             profileImageUrl: data['profileImageUrl'],
             backgroundImageUrl: data['backgroundImageUrl']);
