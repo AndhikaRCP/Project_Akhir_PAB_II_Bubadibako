@@ -18,11 +18,10 @@ class PostServices {
   // Create new post
   Future<void> createPost(
       Post post, BuildContext context, List<File> imageFile) async {
+    CollectionReference _postCollectionForCreatePost =
+        _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
 
-        CollectionReference _postCollectionForCreatePost =
-      _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
-
-        print('INI ID PENGGUNA DI POST  :${idPengguna}');
+    print('INI ID PENGGUNA DI POST  :${idPengguna}');
     print('iINI DARI BACKEND POST: ${PostServices().idPengguna}');
     post.penggunaId = PostServices().idPengguna;
     print(post.toDocument());
@@ -47,7 +46,6 @@ class PostServices {
       throw Exception("Failed to create post");
     }
   }
-
 
   static Future<void> updateIsFavorite(String postId, bool isFavorite) async {
     try {
@@ -107,9 +105,18 @@ class PostServices {
 
 // Read all posts as stream
   Stream<List<Post>> getAllPosts() {
+    bool isFavorite = false;
+    List isFavoriteList = [];
+    _penggunasCollection.doc(idPengguna).snapshots().listen((snapshot) {
+      Map<String, dynamic> dataPengguna =
+          snapshot.data() as Map<String, dynamic>;
+      isFavoriteList = dataPengguna['favorite'];
+    });
+
     return _postsCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        isFavorite =  isFavoriteList.contains(doc.id);
         return Post(
           id: doc.id,
           penggunaId: data['penggunaId'],
@@ -119,7 +126,7 @@ class PostServices {
           longitude: data['longitude'] as double?,
           createdAt: data['created_at'] as Timestamp?,
           updatedAt: data['updated_at'] as Timestamp?,
-          isFavorite: data['isFavorite'] ?? false,
+          isFavorite: isFavorite ,
         );
       }).toList();
     });
