@@ -60,7 +60,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
             return const Center(child: Text('Tidak ada postingan favorit.'));
           } else {
             return StreamBuilder<List<Post>>(
-              stream: PostServices.getPostsByIds(snapshot.data!),
+              stream: PostServices().getPostsByIds(snapshot.data!),
               builder: (context, postSnapshot) {
                 if (postSnapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

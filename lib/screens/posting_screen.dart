@@ -165,7 +165,7 @@ class _PostingScreenState extends State<PostingScreen> {
         imageUrl: _imageList);
     print(newPost.toDocument());
 
-    PostServices.createPost(newPost, context, _imageFile!);
+    PostServices().createPost(newPost, context, _imageFile!);
   }
 
   void _handleGallery() async {

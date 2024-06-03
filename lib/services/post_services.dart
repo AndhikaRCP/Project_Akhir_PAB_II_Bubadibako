@@ -16,20 +16,27 @@ class PostServices {
       _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
 
   // Create new post
-  static Future<void> createPost(
+  Future<void> createPost(
       Post post, BuildContext context, List<File> imageFile) async {
+
+        CollectionReference _postCollectionForCreatePost =
+      _penggunasCollection.doc(PostServices().idPengguna).collection("posts");
+
+        print('INI ID PENGGUNA DI POST  :${idPengguna}');
     print('iINI DARI BACKEND POST: ${PostServices().idPengguna}');
     post.penggunaId = PostServices().idPengguna;
     print(post.toDocument());
     int count = 0;
     for (File imageFile in imageFile!) {
-      post.imageUrl![count] = await uploadImage(
-              imageFile, PostServices().idPengguna, count)
-          .whenComplete(() => print("Berhasil Upload File" + count.toString()));
+      post.imageUrl![count] =
+          await uploadImage(imageFile, PostServices().idPengguna, count)
+              .whenComplete(() {
+        print("Berhasil Upload File" + count.toString());
+      });
       count++;
     }
     try {
-      await PostServices._postsCollection
+      await _postCollectionForCreatePost
           .add(post.toDocument())
           .whenComplete(() {
         print("Berhasil Memposting! sukses");
@@ -40,6 +47,7 @@ class PostServices {
       throw Exception("Failed to create post");
     }
   }
+
 
   static Future<void> updateIsFavorite(String postId, bool isFavorite) async {
     try {
@@ -98,7 +106,7 @@ class PostServices {
   }
 
 // Read all posts as stream
-   Stream<List<Post>> getAllPosts() {
+  Stream<List<Post>> getAllPosts() {
     return _postsCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -117,7 +125,7 @@ class PostServices {
     });
   }
 
-  static Stream<List<Post>> getPostsByIds(List<String> postIds) {
+  Stream<List<Post>> getPostsByIds(List<String> postIds) {
     return _postsCollection
         .where(FieldPath.documentId, whereIn: postIds)
         .snapshots()
