@@ -37,7 +37,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Instagram Feed'),
+        title: const Text('Activity !'),
       ),
       body: StreamBuilder<List<Post>>(
         stream: PostServices().getAllPosts(),
