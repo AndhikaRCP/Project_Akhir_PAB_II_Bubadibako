@@ -142,8 +142,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                             Text(
                               penggunaData.username ?? 'Nama Pengguna Kosong',
                               style: const TextStyle(
-                                  color: Color.fromARGB(255, 18, 6, 6),
-                                  fontSize: 32,
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 5),
@@ -151,51 +151,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                               penggunaData.email ?? 'Nama Pengguna Kosong',
                               style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 24,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w500),
                             ),
                             const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const FollowerScreen(),
-                                        ));
-                                  },
-                                  child: const Text(
-                                    "180 Follower",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const FollowingScreen(),
-                                        ));
-                                  },
-                                  child: const Text(
-                                    "80 Following",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 40,
-                                ),
-                              ],
-                            ),
                             ElevatedButton(
                                 onPressed: () => Navigator.of(context)
                                         .push(MaterialPageRoute(

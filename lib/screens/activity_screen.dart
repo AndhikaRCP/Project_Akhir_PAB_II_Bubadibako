@@ -178,13 +178,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
               const SizedBox(width: 10),
               IconButton(
                 icon: const Icon(
-                  Icons.mode_comment_outlined,
-                  size: 40,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(
                   Icons.map_sharp,
                   size: 40,
                 ),

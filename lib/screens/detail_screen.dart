@@ -74,14 +74,16 @@ class _DetailScreenState extends State<DetailScreen> {
                 } else if (!snapshot.hasData || !snapshot.data!.exists) {
                   return Text('Pengguna tidak ditemukan!');
                 } else {
+                  
                   final userData =
                       snapshot.data!.data() as Map<dynamic, dynamic>;
+
                   // Tampilkan foto profil dan username di sini
                   return Row(
                     children: [
                       CircleAvatar(
                         radius: 20.0,
-                        backgroundImage: NetworkImage(userData['profileImageUrl']),
+                        backgroundImage: NetworkImage(userData['profileImageUrl'] ?? 'https://www.gravatar.com/avatar/HASH?s=200&d=mp'),
                       ),
                       SizedBox(width: 15.0, height: 30,),
 
@@ -122,17 +124,11 @@ class _DetailScreenState extends State<DetailScreen> {
                 width: double.infinity,
               ),
             ),
+               
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.post!.caption!,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
                 IconButton(
                   icon: ValueListenableBuilder<bool>(
                     valueListenable: likeStatusNotifier,
@@ -188,6 +184,13 @@ class _DetailScreenState extends State<DetailScreen> {
               ],
             ),
             const SizedBox(height: 8),
+             Text(
+                  widget.post!.caption!,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
           ],
         ),
       ),
