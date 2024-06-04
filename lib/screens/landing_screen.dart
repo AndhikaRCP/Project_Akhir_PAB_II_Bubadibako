@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/auth_services.dart'; // Import the DashboardScreen
 
 class LandingScreen extends StatefulWidget {

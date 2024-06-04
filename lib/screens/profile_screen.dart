@@ -7,8 +7,6 @@ import 'package:project_akhir_pab_ii_bubadibako/models/penggunaAbout.dart';
 import 'package:project_akhir_pab_ii_bubadibako/models/post.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/detail_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/editProfileAbout.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/follower_screen.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/following_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/auth_services.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/edit_profile_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/services/pengguna_profile_services.dart';
@@ -175,9 +173,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                       Tab(
                         child: Text("Gallery"),
                       ),
-                      Tab(
-                        child: Text("About"),
-                      ),
                     ],
                   ),
                   SizedBox(
@@ -243,105 +238,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   }
                               }
                             },
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Positioned(
-                                bottom: 0,
-                                right: 20,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditProfileAboutScreen(
-                                          pengguna: penggunaData,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text("Edit About"),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(30),
-                                child: Column(
-                                  children: [
-                                    StreamBuilder(
-                                      stream: penggunaServices
-                                          .getPenggunaAboutProfile(
-                                              penggunaData.id ?? ''),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          // Menampilkan indikator loading saat data sedang dimuat
-                                          return const CircularProgressIndicator();
-                                        } else if (snapshot.hasError) {
-                                          // Menampilkan pesan error jika terjadi kesalahan
-                                          return Text(
-                                              'Error: ${snapshot.error}');
-                                        } else {
-                                          // Memuat data penggunaAbout dari snapshot
-                                          PenggunaAbout? penggunaAbout =
-                                              snapshot.data;
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.stretch,
-                                            children: [
-                                              // Menampilkan teks dari penggunaAbout
-                                              Text(
-                                                penggunaAbout?.text ?? 'Kosong',
-                                                style: const TextStyle(
-                                                    fontSize: 20),
-                                                textAlign: TextAlign.justify,
-                                              ),
-                                              const SizedBox(height: 20),
-                                              // Menampilkan gambar dengan AspectRatio
-                                              AspectRatio(
-                                                aspectRatio: 16 / 9,
-                                                child: Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    // Menampilkan indikator loading saat gambar dimuat
-                                                    if (penggunaAbout
-                                                            ?.imageUrl ==
-                                                        null)
-                                                      const CircularProgressIndicator(), // Indikator loading
-                                                    // Memuat gambar dari URL Firebase Storage
-                                                    if (penggunaAbout
-                                                            ?.imageUrl !=
-                                                        null)
-                                                      CachedNetworkImage(
-                                                        imageUrl: penggunaAbout!
-                                                            .imageUrl!,
-                                                        placeholder:
-                                                            (context, url) =>
-                                                                const Center(
-                                                          child:
-                                                              CircularProgressIndicator(),
-                                                        ),
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            const Icon(
-                                                                Icons.error),
-                                                        fit: BoxFit.cover,
-                                                      )
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ],

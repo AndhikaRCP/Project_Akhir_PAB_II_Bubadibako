@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/activity_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/favorite_screen.dart';
-import 'package:project_akhir_pab_ii_bubadibako/screens/notification_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/posting_screen.dart';
 import 'package:project_akhir_pab_ii_bubadibako/screens/profile_screen.dart';
 
